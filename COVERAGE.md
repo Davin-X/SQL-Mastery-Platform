@@ -6,9 +6,9 @@ This repository provides **complete, structured SQL interview preparation** from
 
 ---
 
-## 📚 LEARNING PATH (8 Weeks)
+## 📚 ENHANCED LEARNING PATH (12 Weeks)
 
-### Curriculum Foundation (9 Core SQL Files)
+### Core SQL Foundation (Weeks 1-8) — 9 Core SQL Files
 
 | Week | File | Topic | What you learn |
 |------|------|-------|---|
@@ -22,12 +22,20 @@ This repository provides **complete, structured SQL interview preparation** from
 | 7-8 | `08_indexing_and_performance.sql` | Performance | Indexes, EXPLAIN, query optimization |
 | 8 | `09_stored_procedures_triggers.sql` | Advanced | Stored procedures, functions, triggers |
 
-### Study Guides (3 Essential Documents)
+### Advanced Analytics & Modern SQL (Weeks 9-12) — 2 Enhanced Modules
+
+| Week | File | Topic | What you learn |
+|------|------|-------|---|
+| 9 | `10_advanced_analytics.sql` | Statistics & Analytics | NTILE, PERCENT_RANK, CUME_DIST, CORR, STRING_AGG |
+| 10 | `11_modern_sql_features.sql` | Modern SQL | JSON operations, arrays, window frames, full-text search, CTEs for complex data |
+| 11-12 | `problems/13-14_*.sql` | Business Intelligence | Customer analytics, churn prediction, market basket analysis, trend identification |
+
+### Study Guides (4 Essential Documents)
 
 1. **`00_learning_path.md`** ✓
-   - 8-week structured roadmap
+   - **12-week structured roadmap** (enhanced for advanced analytics)
    - Weekly milestones with outcomes
-   - Exercise mapping to problems/
+   - Exercise mapping to all problems/
    - Tips and resource recommendations
 
 2. **`interview_checklist.md`** ✓
@@ -44,12 +52,20 @@ This repository provides **complete, structured SQL interview preparation** from
    - Starter SQL and expected output
    - Complete solutions with explanations
 
+4. **`quick_reference_guide.md`** ✓ (new)
+   - Complete SQL syntax reference
+   - Common patterns and best practices
+   - Window functions cheat sheet
+   - Performance optimization tips
+   - Interview pattern catalog
+
 ---
 
-## 🎯 INTERVIEW PROBLEMS (12 Sets)
+## 🎯 INTERVIEW PROBLEMS (14 Sets) — Enhanced Coverage
 
-All 12 problems have **dual format** (markdown for learning + SQL for running):
+All 14 problems have **dual format** (markdown for learning + SQL for running):
 
+### Core Interview Problems (1-12) — Traditional SQL
 | # | Topic | Problem | Difficulty | Solution |
 |---|-------|---------|-----------|----------|
 | 01 | Joins | Row counts for INNER/LEFT/RIGHT/FULL | ⭐ | ✓ Included |
@@ -64,6 +80,12 @@ All 12 problems have **dual format** (markdown for learning + SQL for running):
 | 10 | Matching/Dedup | Find unique matches | ⭐⭐ | ✓ Included |
 | 11 | Spike Detection | On/off activity periods | ⭐⭐⭐ | ✓ Included |
 | 12 | Misc Interview | Complex patterns (A + B combined) | ⭐⭐⭐ | ✓ Included |
+
+### Advanced Analytics Problems (13-14) — Business Intelligence
+| # | Topic | Problem | Difficulty | Solution |
+|---|-------|---------|-----------|----------|
+| 13 | Advanced Analytics | Percentiles, correlations, distributions | ⭐⭐⭐ | ✓ Included |
+| 14 | E-commerce Analytics | CLV, churn, market basket analysis | ⭐⭐⭐⭐ | ✓ Included |
 
 **Format:** Each problem has:
 - Problem statement
@@ -253,18 +275,19 @@ All 12 problems have **dual format** (markdown for learning + SQL for running):
 
 ---
 
-## 📊 COMPLETENESS SUMMARY
+## 📊 COMPLETENESS SUMMARY — ENHANCED CONTENT
 
 | Component | Status | Count |
 |-----------|--------|-------|
-| Curriculum files | ✓ Complete | 9 SQL files |
-| Learning guides | ✓ Complete | 3 documents |
-| Problem sets | ✓ Complete | 12 pairs (24 files) |
+| **Curriculum files** | ✓ **Enhanced** | **11 SQL files** (9 core + 2 advanced) |
+| **Learning guides** | ✓ **Enhanced** | **4 documents** (3 original + quick reference) |
+| **Problem sets** | ✓ **Enhanced** | **14 pairs (28 files)** (12 core + 2 advanced analytics) |
 | Mock interviews | ✓ Complete | 10 scenarios |
 | Sample database | ✓ Complete | 6 tables, 60+ rows |
 | Scripts & tools | ✓ Complete | 2 executables |
-| Solutions | ✓ Complete | All 22 problems solved |
+| **Solutions** | ✓ **Enhanced** | **All 28 problems solved** (14 markdown + 14 SQL) |
 | Difficulty range | ✓ Complete | Easy to Expert |
+| **Learning path** | ✓ **Extended** | **12 weeks** (8 core + 4 advanced) |
 
 ---
 

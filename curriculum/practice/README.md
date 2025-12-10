@@ -40,6 +40,7 @@ Each file contains: a short explanation, a minimal sample dataset (CREATE/INSERT
 
 **Linked canonical problems** (each has a `.md` version with problem statement, starter schema, and solutions):
 
+**Core Problems (Weeks 1-8):**
 - `problems/01_joins.md` / `problems/01_joins.sql`
 - `problems/02_conditionals.md` / `problems/02_conditionals.sql`
 - `problems/03_aggregation.md` / `problems/03_aggregation.sql`
@@ -52,6 +53,10 @@ Each file contains: a short explanation, a minimal sample dataset (CREATE/INSERT
 - `problems/10_matching_dedup.md` / `problems/10_matching_dedup.sql`
 - `problems/11_spike_detection.md` / `problems/11_spike_detection.sql`
 - `problems/12_misc_interview.md` / `problems/12_misc_interview.sql`
+
+**Advanced Analytics Problems (Weeks 9-12):**
+- `problems/13_advanced_analytics.md` / `problems/13_advanced_analytics.sql` — Statistical distributions and correlations
+- `problems/14_ecommerce_analytics.md` — Business intelligence and customer analytics
 
 (Read `.md` files for learning; keep `.sql` files for automated test runs.)
 
