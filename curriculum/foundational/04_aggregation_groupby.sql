@@ -3,22 +3,26 @@
 
 USE sample_hr;
 
--- Basic aggregation
+-- Basic aggregation with JOIN
 SELECT
-    department,
-    COUNT(*) AS employees,
-    AVG(salary) AS avg_salary
-FROM employee
+    d.dept_name,
+    COUNT(e.emp_id) AS employees,
+    AVG(e.salary) AS avg_salary,
+    MIN(e.salary) AS min_salary,
+    MAX(e.salary) AS max_salary
+FROM employee e
+    JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-    department;
+    d.dept_name;
 
 -- HAVING example: departments with more than 2 employees
-SELECT department, COUNT(*) AS employees
-FROM employee
+SELECT d.dept_name, COUNT(e.emp_id) AS employees
+FROM employee e
+    JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-    department
+    d.dept_name
 HAVING
-    COUNT(*) > 2;
+    COUNT(e.emp_id) > 2;
 
 -- ===========================================
 -- MYSQL VERSION
@@ -26,28 +30,28 @@ HAVING
 
 USE sample_hr;
 
--- Basic aggregation
-SELECT
-    department,
-    COUNT(*) AS employees,
-    AVG(salary) AS avg_salary
-FROM employee
+-- Basic aggregation with JOIN
+SELECT d.dept_name, COUNT(e.emp_id) AS employees, AVG(e.salary) AS avg_salary
+FROM employee e
+    JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-    department;
+    d.dept_name;
 
 -- HAVING example: departments with more than 2 employees
-SELECT department, COUNT(*) AS employees
-FROM employee
+SELECT d.dept_name, COUNT(e.emp_id) AS employees
+FROM employee e
+    JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-    department
+    d.dept_name
 HAVING
-    COUNT(*) > 2;
+    COUNT(e.emp_id) > 2;
 
 -- String aggregation (MySQL: GROUP_CONCAT)
-SELECT department, GROUP_CONCAT(first_name SEPARATOR ', ') AS names
-FROM employee
+SELECT d.dept_name, GROUP_CONCAT(e.first_name SEPARATOR ', ') AS names
+FROM employee e
+    JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-    department;
+    d.dept_name;
 
 -- ===========================================
 -- POSTGRESQL VERSION
@@ -58,28 +62,31 @@ GROUP BY
 
 \c sample_hr;
 
--- Basic aggregation (same as MySQL)
+-- Basic aggregation with JOIN (same as MySQL)
 SELECT
-department,
-COUNT(*) AS employees,
-AVG(salary) AS avg_salary
-FROM employee
+d.dept_name,
+COUNT(e.emp_id) AS employees,
+AVG(e.salary) AS avg_salary
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-department;
+d.dept_name;
 
 -- HAVING example (same as MySQL)
-SELECT department, COUNT(*) AS employees
-FROM employee
+SELECT d.dept_name, COUNT(e.emp_id) AS employees
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-department
+d.dept_name
 HAVING
-COUNT(*) > 2;
+COUNT(e.emp_id) > 2;
 
 -- String aggregation (PostgreSQL: STRING_AGG)
-SELECT department, STRING_AGG(first_name, ', ') AS names
-FROM employee
+SELECT d.dept_name, STRING_AGG(e.first_name, ', ') AS names
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-department;
+d.dept_name;
 
 -- PostgreSQL Notes:
 -- - GROUP_CONCAT() → STRING_AGG(column, separator)
@@ -96,38 +103,42 @@ department;
 
 USE sample_hr;
 
--- Basic aggregation (same as MySQL)
+-- Basic aggregation with JOIN (same as MySQL)
 SELECT
-department,
-COUNT(*) AS employees,
-AVG(salary) AS avg_salary
-FROM employee
+d.dept_name,
+COUNT(e.emp_id) AS employees,
+AVG(e.salary) AS avg_salary
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-department;
+d.dept_name;
 
 -- HAVING example (same as MySQL)
-SELECT department, COUNT(*) AS employees
-FROM employee
+SELECT d.dept_name, COUNT(e.emp_id) AS employees
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-department
+d.dept_name
 HAVING
-COUNT(*) > 2;
+COUNT(e.emp_id) > 2;
 
 -- String aggregation (SQL Server: STRING_AGG - SQL Server 2017+)
-SELECT department, STRING_AGG(first_name, ', ') AS names
-FROM employee
+SELECT d.dept_name, STRING_AGG(e.first_name, ', ') AS names
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-department;
+d.dept_name;
 
 -- Alternative for older SQL Server versions (before 2017):
 -- Uses XML PATH or FOR XML for string concatenation
-SELECT department,
-STUFF((SELECT ', ' + first_name
+SELECT d.dept_name,
+STUFF((SELECT ', ' + e2.first_name
 FROM employee e2
-WHERE e2.department = e1.department
+JOIN department d2 ON e2.dept_id = d2.dept_id
+WHERE d2.dept_name = d1.dept_name
 FOR XML PATH('')), 1, 2, '') AS names
-FROM employee e1
-GROUP BY department;
+FROM department d1
+GROUP BY d1.dept_name;
 
 -- SQL Server Notes:
 -- - GROUP_CONCAT() → STRING_AGG(column, separator) (2017+)
@@ -138,11 +149,14 @@ GROUP BY department;
 
 -- Exercises (all databases):
 -- 1) List top 3 departments by employee count.
---    Solution: SELECT department, COUNT(*) as cnt FROM employee
---              GROUP BY department ORDER BY cnt DESC LIMIT 3; (MySQL/PostgreSQL)
---              -- or: SELECT TOP 3 department, COUNT(*) as cnt FROM employee
---                     GROUP BY department ORDER BY cnt DESC; (SQL Server)
+--    Solution: SELECT d.dept_name, COUNT(e.emp_id) as cnt FROM employee e
+--              JOIN department d ON e.dept_id = d.dept_id
+--              GROUP BY d.dept_name ORDER BY cnt DESC LIMIT 3; (MySQL/PostgreSQL)
+--              -- or: SELECT TOP 3 d.dept_name, COUNT(e.emp_id) as cnt FROM employee e
+--                     JOIN department d ON e.dept_id = d.dept_id
+--                     GROUP BY d.dept_name ORDER BY cnt DESC; (SQL Server)
 
 -- 2) For each department, show earliest hire_date.
---    Solution: SELECT department, MIN(hire_date) as earliest_hire
---              FROM employee GROUP BY department;
+--    Solution: SELECT d.dept_name, MIN(e.hire_date) as earliest_hire
+--              FROM employee e JOIN department d ON e.dept_id = d.dept_id
+--              GROUP BY d.dept_name;

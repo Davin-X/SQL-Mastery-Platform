@@ -5,12 +5,12 @@
 USE sample_hr;
 
 -- INNER JOIN: match rows in both tables
-SELECT e.employee_id, e.first_name, d.dept_name
+SELECT e.emp_id, e.first_name, e.last_name, d.dept_name, e.salary
 FROM employee e
     JOIN department d ON e.dept_id = d.dept_id;
 
 -- LEFT JOIN: all rows from left table
-SELECT e.employee_id, e.first_name, d.dept_name
+SELECT e.emp_id, e.first_name, e.last_name, d.dept_name, e.salary
 FROM employee e
     LEFT JOIN department d ON e.dept_id = d.dept_id;
 

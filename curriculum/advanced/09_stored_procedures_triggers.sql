@@ -13,7 +13,9 @@ DELIMITER $$
 
 CREATE PROCEDURE sp_get_employees_by_dept(IN in_dept VARCHAR(50))
 BEGIN
-  SELECT employee_id, first_name, last_name FROM employee WHERE department = in_dept;
+  SELECT emp_id, first_name, last_name FROM employee e
+  JOIN department d ON e.dept_id = d.dept_id
+  WHERE d.dept_name = in_dept;
 END$$
 
 DELIMITER ;
@@ -33,10 +35,11 @@ DELIMITER ;
 
 -- PostgreSQL stored procedure (using functions)
 CREATE OR REPLACE FUNCTION fn_get_employees_by_dept(in_dept VARCHAR(50))
-RETURNS TABLE(employee_id INTEGER, first_name VARCHAR, last_name VARCHAR) AS $$
+RETURNS TABLE(emp_id INTEGER, first_name VARCHAR, last_name VARCHAR) AS $$
 BEGIN
-  RETURN QUERY SELECT e.employee_id, e.first_name, e.last_name
-               FROM employee e WHERE e.department = in_dept;
+  RETURN QUERY SELECT e.emp_id, e.first_name, e.last_name
+               FROM employee e JOIN department d ON e.dept_id = d.dept_id
+               WHERE d.dept_name = in_dept;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -77,9 +80,10 @@ CREATE PROCEDURE sp_get_employees_by_dept
   @in_dept VARCHAR(50)
 AS
 BEGIN
-  SELECT employee_id, first_name, last_name
-  FROM employee
-  WHERE department = @in_dept;
+  SELECT e.emp_id, e.first_name, e.last_name
+  FROM employee e
+  JOIN department d ON e.dept_id = d.dept_id
+  WHERE d.dept_name = @in_dept;
 END;
 
 -- Execute the procedure
@@ -95,7 +99,7 @@ EXEC sp_get_employees_by_dept @in_dept = 'Engineering';
 --   UPDATE employee
 --   SET created_at = GETDATE()
 --   FROM employee e
---   INNER JOIN inserted i ON e.employee_id = i.employee_id;
+--   INNER JOIN inserted i ON e.emp_id = i.emp_id;
 -- END;
 
 -- SQL Server Notes:

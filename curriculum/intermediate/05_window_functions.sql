@@ -14,29 +14,29 @@ USE sample_hr;
 
 -- ROW_NUMBER: Unique sequential numbers (no gaps)
 SELECT
-    employee_id,
+    emp_id,
     first_name,
     last_name,
-    department,
+    dept_name,
     salary,
     ROW_NUMBER() OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY salary DESC, hire_date ASC
     ) AS dept_salary_rank
 FROM employee e
     JOIN department d ON e.dept_id = d.dept_id
-ORDER BY department, dept_salary_rank;
+ORDER BY dept_name, dept_salary_rank;
 
 -- RANK: Ranking with gaps for ties
 SELECT
-    employee_id,
+    emp_id,
     first_name,
-    department,
+    dept_name,
     salary,
     RANK() OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY salary DESC
     ) AS dept_rank,
     RANK() OVER (
@@ -48,28 +48,28 @@ ORDER BY company_rank;
 
 -- DENSE_RANK: Ranking without gaps for ties
 SELECT
-    employee_id,
+    emp_id,
     first_name,
-    department,
+    dept_name,
     salary,
     RANK() OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY salary DESC
     ) AS rank_with_gaps,
     DENSE_RANK() OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY salary DESC
     ) AS rank_dense,
     ROW_NUMBER() OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY salary DESC
     ) AS row_num
 FROM employee e
     JOIN department d ON e.dept_id = d.dept_id
-ORDER BY department, salary DESC;
+ORDER BY dept_name, salary DESC;
 
 -- ===========================================
 -- NAVIGATION: LEAD & LAG Functions
@@ -77,7 +77,7 @@ ORDER BY department, salary DESC;
 
 -- LAG: Access previous row's value
 SELECT
-    employee_id,
+    emp_id,
     first_name,
     hire_date,
     salary,
@@ -101,7 +101,7 @@ ORDER BY dept_id, hire_date;
 
 -- LEAD: Access next/future row's value
 SELECT
-    employee_id,
+    emp_id,
     first_name,
     hire_date,
     LEAD(first_name) OVER (
@@ -127,24 +127,24 @@ ORDER BY hire_date;
 SELECT
     emp_id,
     first_name,
-    department,
+    dept_name,
     salary,
     hire_date,
     FIRST_VALUE(first_name) OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY hire_date
     ) AS dept_first_hire,
     FIRST_VALUE(salary) OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY
             hire_date ROWS BETWEEN UNBOUNDED PRECEDING
             AND UNBOUNDED FOLLOWING
     ) AS dept_highest_salary,
     salary - FIRST_VALUE(salary) OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY hire_date
     ) AS salary_vs_dept_first
 FROM employee e
@@ -154,26 +154,26 @@ FROM employee e
 SELECT
     emp_id,
     first_name,
-    department,
+    dept_name,
     salary,
     hire_date,
     LAST_VALUE(salary) OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY
             hire_date ROWS BETWEEN UNBOUNDED PRECEDING
             AND UNBOUNDED FOLLOWING
     ) AS dept_latest_salary,
     LAST_VALUE(first_name) OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY
             hire_date ROWS BETWEEN UNBOUNDED PRECEDING
             AND CURRENT ROW
     ) AS most_recent_hire_yet
 FROM employee e
     JOIN department d ON e.dept_id = d.dept_id
-ORDER BY department, hire_date;
+ORDER BY dept_name, hire_date;
 
 -- ===========================================
 -- AGGREGATES: Running Totals & Moving Averages
@@ -183,17 +183,17 @@ ORDER BY department, hire_date;
 SELECT
     emp_id,
     first_name,
-    department,
+    dept_name,
     salary,
     SUM(salary) OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY hire_date ROWS UNBOUNDED PRECEDING
     ) AS cumulative_salary,
     ROUND(
         AVG(salary) OVER (
             PARTITION BY
-                department
+                dept_name
             ORDER BY hire_date ROWS BETWEEN 2 PRECEDING
                 AND CURRENT ROW
         ),

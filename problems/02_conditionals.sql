@@ -2,101 +2,113 @@
 --- tbEmployeeMaster (EmployeeId     , EmployeeName  ,gender   ,    Department)
 -- output = department , female  , male , total_employees
 
-CREATE TABLE tbEmployeeMaster (
-    EmployeeId INT PRIMARY KEY NOT NULL,
-    EmployeeName VARCHAR(50),
-    Gender VARCHAR(10),
-    Department VARCHAR(50)
+CREATE TABLE employee (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    gender VARCHAR(10),
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES department (dept_id)
 );
 
+-- Insert departments first
 INSERT INTO
-    tbEmployeeMaster
-VALUES (
-        1,
-        "Arjun",
-        "Male",
-        "Administration"
-    ),
-    (2, "Rohan", "Male", "Sales"),
-    (3, "Ishita", NULL, "HRM"),
-    (4, "Aadi", "Male", "Sales"),
-    (5, "Preetam", "Male", "HRM"),
+    department (dept_name)
+VALUES ('Administration'),
+    ('Sales'),
+    ('HR'),
+    ('Finance');
+
+INSERT INTO
+    employee (
+        first_name,
+        last_name,
+        gender,
+        dept_id
+    )
+VALUES ('Arjun', 'Sharma', 'Male', 1),
+    ('Rohan', 'Verma', 'Male', 2),
+    ('Ishita', 'Singh', NULL, 3),
+    ('Aadi', 'Kumar', 'Male', 2),
+    ('Preetam', 'Gupta', 'Male', 3),
+    ('Anjan', 'Patel', 'Male', 1),
+    ('Rajesh', 'Yadav', NULL, 3),
+    ('Ankur', 'Jain', 'Male', 3),
     (
-        6,
-        "Anjan",
-        "Male",
-        "Administration"
-    ),
-    (7, "Rajesh", NULL, "HRM"),
-    (8, "Ankur", "Male", "HRM"),
-    (9, "Robin", "Male", NULL),
-    (10, "Mayank", "Male", "Sales"),
-    (
-        11,
-        "Manisha",
-        "Female",
-        "HRM"
-    ),
-    (12, "Sonam", "Female", "HRM"),
-    (13, "Rajan", "Male", "HRM"),
-    (14, "Kapil", NULL, "Sales"),
-    (15, "Ritika", "Female", "HRM"),
-    (
-        16,
-        "Akshay",
-        "Male",
-        "Finance"
-    ),
-    (17, "Aryan", "Male", "HRM"),
-    (
-        18,
-        "Anju",
-        "Female",
-        "Finance"
+        'Robin',
+        'Malhotra',
+        'Male',
+        NULL
     ),
     (
-        19,
-        "Sapna",
-        "Female",
-        "Finance"
-    ),
-    (20, "Ruhi", "Female", NULL),
-    (21, "Robin", "Male", "Sales"),
-    (22, "Neelam", "Female", "HRM"),
-    (
-        23,
-        "Rajni",
-        "Female",
-        "Administration"
+        'Mayank',
+        'Agarwal',
+        'Male',
+        2
     ),
     (
-        24,
-        "Sonakshi",
-        "Female",
-        "Finance"
+        'Manisha',
+        'Chopra',
+        'Female',
+        3
+    ),
+    (
+        'Sonam',
+        'Bhatia',
+        'Female',
+        3
+    ),
+    ('Rajan', 'Shah', 'Male', 3),
+    ('Kapil', 'Mehta', NULL, 2),
+    ('Ritika', 'Nair', 'Female', 3),
+    ('Akshay', 'Reddy', 'Male', 4),
+    ('Aryan', 'Kapoor', 'Male', 3),
+    ('Anju', 'Pillai', 'Female', 4),
+    ('Sapna', 'Joshi', 'Female', 4),
+    (
+        'Ruhi',
+        'Desai',
+        'Female',
+        NULL
+    ),
+    ('Robin', 'Iyer', 'Male', 2),
+    ('Neelam', 'Rao', 'Female', 3),
+    ('Rajni', 'Khan', 'Female', 1),
+    (
+        'Sonakshi',
+        'Sinha',
+        'Female',
+        4
     );
 
 --Check data in table
-SELECT * FROM tbEmployeeMaster;
+SELECT e.emp_id, e.first_name, e.last_name, e.gender, d.dept_name
+FROM employee e
+    LEFT JOIN department d ON e.dept_id = d.dept_id;
 
 --Get department wise male, female and total employees in each department
-SELECT IFNULL(TB.Department, 'Not Assigned') AS Department, TB.Male, TB.Female, (TB.Male + TB.Female) AS 'Total Employees'
+SELECT
+    COALESCE(d.dept_name, 'Not Assigned') AS Department,
+    TB.Male,
+    TB.Female,
+    (TB.Male + TB.Female) AS Total_Employees
 FROM (
-        SELECT Department, COUNT(
+        SELECT dept_id, COUNT(
                 CASE
-                    WHEN UPPER(Gender) = 'MALE' THEN 1
+                    WHEN UPPER(gender) = 'MALE' THEN 1
                 END
             ) AS Male, COUNT(
                 CASE
-                    WHEN UPPER(Gender) = 'FEMALE' THEN 1
+                    WHEN UPPER(gender) = 'FEMALE' THEN 1
                 END
             ) AS Female
-        FROM tbEmployeeMaster
+        FROM employee
         GROUP BY
-            Department
+            dept_id
     ) AS TB
+    LEFT JOIN department d ON TB.dept_id = d.dept_id
 ORDER BY
     CASE
-        WHEN TB.Department IS NULL THEN 1
+        WHEN d.dept_name IS NULL THEN 1
         ELSE 0
     END;

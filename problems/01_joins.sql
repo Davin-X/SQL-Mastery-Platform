@@ -37,19 +37,18 @@ the result-set will contain NULL values
 
 */
 
---practical
+-- Practical examples using sample_hr database
 
-CREATE database tmp;
+USE sample_hr;
 
-use tmp;
+-- Create sample tables for join demonstration
+CREATE TABLE table1 (t1 INT);
 
-create table table1 (t1 int);
+CREATE TABLE table2 (t2 INT);
 
-INSERT INTO table1 values (1), (1), (1), (null), (null);
+INSERT INTO table1 VALUES (1), (1), (1), (NULL), (NULL);
 
-create table table2 (t2 int);
-
-INSERT INTO table2 values (1), (1), (1), (1), (1);
+INSERT INTO table2 VALUES (1), (1), (1), (1), (1);
 
 -- inner join
 SELECT * FROM table1 join table2 on table1.t1 = table2.t2;
@@ -83,7 +82,7 @@ WHERE
 
 /*
 -- PostgreSQL supports FULL OUTER JOIN natively:
-\c tmp;
+\c sample_hr;
 
 -- Full outer join (PostgreSQL)
 SELECT * FROM table1
@@ -104,7 +103,7 @@ WHERE table1.t1 IS NULL;
 
 /*
 -- SQL Server supports FULL OUTER JOIN natively:
-USE tmp;
+USE sample_hr;
 
 -- Full outer join (SQL Server)
 SELECT * FROM table1

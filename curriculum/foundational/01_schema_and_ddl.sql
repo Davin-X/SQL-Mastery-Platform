@@ -13,26 +13,29 @@ USE sample_hr;
 
 DROP TABLE IF EXISTS employee;
 
-CREATE TABLE employee (
-    employee_id INT PRIMARY KEY AUTO_INCREMENT,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    hire_date DATE,
-    department VARCHAR(50)
-);
-
 DROP TABLE IF EXISTS department;
 
+-- Department table
 CREATE TABLE department (
     dept_id INT PRIMARY KEY AUTO_INCREMENT,
-    dept_name VARCHAR(50) UNIQUE NOT NULL
+    dept_name VARCHAR(50) NOT NULL UNIQUE,
+    location VARCHAR(100),
+    budget DECIMAL(15, 2)
 );
 
--- Add a foreign key example
-ALTER TABLE employee ADD COLUMN dept_id INT;
-
-ALTER TABLE employee
-ADD CONSTRAINT fk_emp_dept FOREIGN KEY (dept_id) REFERENCES department (dept_id);
+-- Employee table
+CREATE TABLE employee (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    gender VARCHAR(10),
+    hire_date DATE NOT NULL,
+    salary DECIMAL(10, 2) NOT NULL,
+    dept_id INT,
+    manager_id INT,
+    FOREIGN KEY (dept_id) REFERENCES department (dept_id),
+    FOREIGN KEY (manager_id) REFERENCES employee (emp_id)
+);
 
 -- ===========================================
 -- POSTGRESQL VERSION
@@ -51,25 +54,27 @@ ADD CONSTRAINT fk_emp_dept FOREIGN KEY (dept_id) REFERENCES department (dept_id)
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS department;
 
--- Create tables with SERIAL (auto-increment equivalent)
-CREATE TABLE employee (
-employee_id SERIAL PRIMARY KEY,
-first_name VARCHAR(50) NOT NULL,
-last_name VARCHAR(50) NOT NULL,
-hire_date DATE,
-department VARCHAR(50)
-);
-
+-- Department table
 CREATE TABLE department (
 dept_id SERIAL PRIMARY KEY,
-dept_name VARCHAR(50) UNIQUE NOT NULL
+dept_name VARCHAR(50) NOT NULL UNIQUE,
+location VARCHAR(100),
+budget DECIMAL(15, 2)
 );
 
--- Add foreign key column and constraint
-ALTER TABLE employee ADD COLUMN dept_id INTEGER;
-
-ALTER TABLE employee
-ADD CONSTRAINT fk_emp_dept FOREIGN KEY (dept_id) REFERENCES department (dept_id);
+-- Employee table
+CREATE TABLE employee (
+emp_id SERIAL PRIMARY KEY,
+first_name VARCHAR(50) NOT NULL,
+last_name VARCHAR(50) NOT NULL,
+gender VARCHAR(10),
+hire_date DATE NOT NULL,
+salary DECIMAL(10, 2) NOT NULL,
+dept_id INTEGER,
+manager_id INTEGER,
+FOREIGN KEY (dept_id) REFERENCES department (dept_id),
+FOREIGN KEY (manager_id) REFERENCES employee (emp_id)
+);
 
 -- PostgreSQL Notes:
 -- - SERIAL creates an INTEGER column with associated SEQUENCE
@@ -94,25 +99,27 @@ USE sample_hr;
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS department;
 
--- Create tables with IDENTITY (auto-increment equivalent)
-CREATE TABLE employee (
-employee_id INT IDENTITY(1,1) PRIMARY KEY,
-first_name VARCHAR(50) NOT NULL,
-last_name VARCHAR(50) NOT NULL,
-hire_date DATE,
-department VARCHAR(50)
-);
-
+-- Department table
 CREATE TABLE department (
 dept_id INT IDENTITY(1,1) PRIMARY KEY,
-dept_name VARCHAR(50) UNIQUE NOT NULL
+dept_name VARCHAR(50) NOT NULL UNIQUE,
+location VARCHAR(100),
+budget DECIMAL(15, 2)
 );
 
--- Add foreign key column and constraint
-ALTER TABLE employee ADD dept_id INT;
-
-ALTER TABLE employee
-ADD CONSTRAINT fk_emp_dept FOREIGN KEY (dept_id) REFERENCES department (dept_id);
+-- Employee table
+CREATE TABLE employee (
+emp_id INT IDENTITY(1,1) PRIMARY KEY,
+first_name VARCHAR(50) NOT NULL,
+last_name VARCHAR(50) NOT NULL,
+gender VARCHAR(10),
+hire_date DATE NOT NULL,
+salary DECIMAL(10, 2) NOT NULL,
+dept_id INT,
+manager_id INT,
+FOREIGN KEY (dept_id) REFERENCES department (dept_id),
+FOREIGN KEY (manager_id) REFERENCES employee (emp_id)
+);
 
 -- SQL Server Notes:
 -- - IDENTITY(seed, increment) for auto-increment
@@ -127,8 +134,8 @@ ADD CONSTRAINT fk_emp_dept FOREIGN KEY (dept_id) REFERENCES department (dept_id)
 --    PostgreSQL: ALTER TABLE employee ALTER COLUMN hire_date SET NOT NULL;
 --    SQL Server: ALTER TABLE employee ALTER COLUMN hire_date DATE NOT NULL;
 
--- 2) Create an index on department for faster lookups
---    All databases: CREATE INDEX idx_emp_dept ON employee(department);
+-- 2) Create an index on dept_id for faster lookups
+--    All databases: CREATE INDEX idx_emp_dept_id ON employee(dept_id);
 
 -- 3) Drop the fk constraint and then remove the column
 --    All databases: ALTER TABLE employee DROP CONSTRAINT fk_emp_dept;

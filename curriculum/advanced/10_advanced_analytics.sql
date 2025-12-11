@@ -8,11 +8,11 @@ USE sample_hr;
 SELECT
     emp_id,
     first_name,
-    department,
+    dept_name,
     salary,
     NTILE(4) OVER (
         PARTITION BY
-            department
+            dept_name
         ORDER BY salary
     ) AS salary_quartile,
     NTILE(10) OVER (
@@ -20,7 +20,7 @@ SELECT
     ) AS decile_overall
 FROM employee e
     JOIN department d ON e.dept_id = d.dept_id
-ORDER BY department, salary_quartile;
+ORDER BY dept_name, salary_quartile;
 
 -- PERCENT_RANK: Relative rank (0 to 1 scale)
 SELECT
@@ -58,7 +58,7 @@ USE sample_hr;
 -- MEDIAN calculation using window functions
 -- (MySQL 8.0+: PERCENTILE_CONT within GROUP BY)
 SELECT
-    department,
+    dept_name,
     AVG(salary) AS avg_salary,
     -- Manual median calculation for older MySQL versions
     PERCENTILE_CONT (0.5) WITHIN GROUP (
@@ -73,7 +73,7 @@ SELECT
 FROM employee e
     JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
-    department;
+    dept_name;
 
 -- ===========================================
 -- POSTGRESQL VERSION - MEDIAN & PERCENTILES
@@ -86,14 +86,14 @@ GROUP BY
 
 -- PostgreSQL percentile functions (same as MySQL 8.0+)
 SELECT
-department,
+dept_name,
 AVG(salary) AS avg_salary,
 PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) AS median_salary,
 PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY salary) AS q1_salary,
 PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary) AS q3_salary
 FROM employee e
 JOIN department d ON e.dept_id = d.dept_id
-GROUP BY department;
+GROUP BY dept_name;
 
 -- Alternative: Use window functions for manual calculation
 SELECT DISTINCT
@@ -115,11 +115,11 @@ USE sample_hr;
 
 -- SQL Server percentile functions (2012+)
 SELECT
-department,
+dept_name,
 AVG(salary) AS avg_salary,
-PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY department) AS median_salary,
-PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY department) AS q1_salary,
-PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY department) AS q3_salary
+PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY dept_name) AS median_salary,
+PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY dept_name) AS q1_salary,
+PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY dept_name) AS q3_salary
 FROM employee e
 JOIN department d ON e.dept_id = d.dept_id;
 
@@ -127,18 +127,18 @@ JOIN department d ON e.dept_id = d.dept_id;
 -- Use ROW_NUMBER and subqueries for median calculation
 WITH ranked_salaries AS (
 SELECT
-department,
+dept_name,
 salary,
-ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary) AS rn,
-COUNT(*) OVER (PARTITION BY department) AS cnt
+ROW_NUMBER() OVER (PARTITION BY dept_name ORDER BY salary) AS rn,
+COUNT(*) OVER (PARTITION BY dept_name) AS cnt
 FROM employee e
 JOIN department d ON e.dept_id = d.dept_id
 )
 SELECT
-department,
+dept_name,
 AVG(CASE WHEN rn IN ((cnt + 1)/2, (cnt + 2)/2) THEN salary END) AS median_salary
 FROM ranked_salaries
-GROUP BY department;
+GROUP BY dept_name;
 */
 
 -- STRING_AGG for concatenated lists (useful for reporting)
