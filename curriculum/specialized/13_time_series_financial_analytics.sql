@@ -2,6 +2,10 @@
 -- FINANCIAL TIME SERIES MASTER CLASS
 -- Advanced time series analysis for financial data and business metrics
 
+-- ===========================================
+-- MYSQL VERSION
+-- ===========================================
+
 USE sample_hr;
 
 -- ===========================================
@@ -300,6 +304,8 @@ ROUND(
 ) AS profit_growth_mom,
 
 -- Trend Classification
+
+
 CASE
             WHEN total_revenue > AVG(total_revenue) OVER (ORDER BY month_year ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
                  THEN 'Above_Average'
@@ -359,6 +365,8 @@ metric_value - AVG(metric_value) OVER (
 AVG(metric_value) OVER ( PARTITION BY week_of_year ) AS weekly_avg,
 
 -- Seasonality indices
+
+
 ROUND(
             AVG(metric_value) OVER (PARTITION BY month) /
             AVG(metric_value) OVER () * 100,
@@ -532,6 +540,8 @@ AVG(monthly_total) OVER (
 ) AS ma_3_forecast,
 
 -- Exponential smoothing forecast
+
+
 ROUND(
             0.3 * monthly_total +
             0.4 * LAG(monthly_total, 1) OVER (PARTITION BY metric_type ORDER BY time_index) +
@@ -581,6 +591,7 @@ ORDER BY metric_type, time_index;
 
 -- Comprehensive financial dashboard with KPIs
 
+
 WITH kpi_calculations AS (
     SELECT
         DATE_FORMAT(metric_date, '%Y-%m') AS period,
@@ -629,6 +640,8 @@ ROUND(
 ) AS pop_growth_pct,
 
 -- Statistical measures
+
+
 ROUND(STDDEV_POP(metric_value), 2) AS volatility,
         ROUND(
             STDDEV_POP(metric_value) / NULLIF(AVG(metric_value), 0),
@@ -676,9 +689,248 @@ CASE
 END AS trend_strength,
 
 -- Risk-adjusted growth
+
+
 ROUND(pop_growth_pct / NULLIF(volatility_ratio, 0), 2) AS risk_adjusted_growth
 
     FROM kpi_calculations
 )
 SELECT * FROM kpi_dashboard
 ORDER BY metric_type, period DESC;
+
+-- ===========================================
+-- POSTGRESQL VERSION
+-- ===========================================
+
+/*
+-- PostgreSQL equivalent syntax for financial time series analytics:
+
+\c sample_hr;
+
+-- Create financial metrics table (PostgreSQL)
+DROP TABLE IF EXISTS financial_metrics;
+
+CREATE TABLE financial_metrics (
+metric_id SERIAL PRIMARY KEY,
+metric_date DATE,
+metric_type VARCHAR(20) CHECK (metric_type IN ('revenue', 'costs', 'profit', 'investment', 'cash_flow', 'assets', 'liabilities')),
+metric_value DECIMAL(15, 2),
+currency VARCHAR(3) DEFAULT 'USD',
+fiscal_period VARCHAR(10),
+source_system VARCHAR(50),
+confidence_level DECIMAL(3, 2),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create indexes
+CREATE INDEX idx_metric_date_type ON financial_metrics (metric_date, metric_type);
+CREATE INDEX idx_period_type ON financial_metrics (fiscal_period, metric_type);
+
+-- Moving averages and trend analysis (PostgreSQL)
+SELECT
+metric_date,
+metric_type,
+metric_value,
+-- Simple Moving Averages
+AVG(metric_value) OVER (
+PARTITION BY metric_type
+ORDER BY metric_date
+ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+) AS sma_7day,
+AVG(metric_value) OVER (
+PARTITION BY metric_type
+ORDER BY metric_date
+ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
+) AS sma_30day,
+-- Exponential Moving Average approximation
+AVG(metric_value * POWER(0.9, datediff)) OVER (
+PARTITION BY metric_type
+ORDER BY metric_date
+ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
+) / AVG(POWER(0.9, datediff)) OVER (
+PARTITION BY metric_type
+ORDER BY metric_date
+ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
+) AS ema_30day
+FROM (
+SELECT
+metric_date,
+metric_type,
+metric_value,
+(metric_date - MIN(metric_date) OVER (PARTITION BY metric_type))::INTEGER AS datediff
+FROM financial_metrics
+) dated_metrics
+WHERE metric_type IN ('revenue', 'costs')
+ORDER BY metric_type, metric_date;
+
+-- Financial KPIs and ratios (PostgreSQL)
+WITH monthly_financials AS (
+SELECT
+TO_CHAR(metric_date, 'YYYY-MM') AS month_year,
+SUM(CASE WHEN metric_type = 'revenue' THEN metric_value ELSE 0 END) AS total_revenue,
+SUM(CASE WHEN metric_type = 'costs' THEN metric_value ELSE 0 END) AS total_costs,
+SUM(CASE WHEN metric_type = 'profit' THEN metric_value ELSE 0 END) AS total_profit,
+SUM(CASE WHEN metric_type = 'investment' THEN metric_value ELSE 0 END) AS total_investment,
+SUM(CASE WHEN metric_type = 'cash_flow' THEN metric_value ELSE 0 END) AS operating_cash_flow
+FROM financial_metrics
+GROUP BY TO_CHAR(metric_date, 'YYYY-MM')
+)
+SELECT
+month_year,
+total_revenue,
+total_costs,
+total_profit,
+ROUND(total_profit / NULLIF(total_revenue, 0) * 100, 2) AS profit_margin_pct,
+ROUND((total_revenue - total_costs) / NULLIF(total_revenue, 0) * 100, 2) AS gross_margin_pct,
+ROUND(100.0 * (total_revenue - LAG(total_revenue) OVER (ORDER BY month_year)) /
+NULLIF(LAG(total_revenue) OVER (ORDER BY month_year), 0), 2) AS revenue_growth_mom
+FROM monthly_financials
+ORDER BY month_year;
+
+-- Volatility and risk analysis (PostgreSQL)
+SELECT
+TO_CHAR(metric_date, 'YYYY-MM') AS month_year,
+metric_type,
+COUNT(*) AS data_points,
+ROUND(AVG(metric_value), 2) AS mean_value,
+ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY metric_value), 2) AS median_value,
+ROUND(STDDEV_POP(metric_value), 2) AS standard_deviation,
+ROUND(STDDEV_POP(metric_value) / NULLIF(AVG(metric_value), 0), 4) AS coefficient_of_variation,
+ROUND(AVG(metric_value) - 1.645 * STDDEV_POP(metric_value), 2) AS var_95_pct
+FROM financial_metrics
+GROUP BY TO_CHAR(metric_date, 'YYYY-MM'), metric_type
+ORDER BY month_year, metric_type;
+
+-- PostgreSQL Notes:
+-- - SERIAL instead of AUTO_INCREMENT
+-- - CHECK constraints instead of ENUM
+-- - TO_CHAR() instead of DATE_FORMAT()
+-- - PERCENTILE_CONT() WITHIN GROUP instead of MEDIAN()
+-- - POWER() instead of POW()
+-- - Date arithmetic with ::INTEGER casting
+-- - Same window function syntax
+*/
+
+-- ===========================================
+-- SQL SERVER VERSION
+-- ===========================================
+
+/*
+-- SQL Server equivalent syntax for financial time series analytics:
+
+USE sample_hr;
+
+-- Create financial metrics table (SQL Server)
+DROP TABLE IF EXISTS financial_metrics;
+
+CREATE TABLE financial_metrics (
+metric_id INT IDENTITY(1,1) PRIMARY KEY,
+metric_date DATE,
+metric_type VARCHAR(20) CHECK (metric_type IN ('revenue', 'costs', 'profit', 'investment', 'cash_flow', 'assets', 'liabilities')),
+metric_value DECIMAL(15, 2),
+currency VARCHAR(3) DEFAULT 'USD',
+fiscal_period VARCHAR(10),
+source_system VARCHAR(50),
+confidence_level DECIMAL(3, 2),
+created_at DATETIME2 DEFAULT GETDATE()
+);
+
+-- Create indexes
+CREATE INDEX idx_metric_date_type ON financial_metrics (metric_date, metric_type);
+CREATE INDEX idx_period_type ON financial_metrics (fiscal_period, metric_type);
+
+-- Moving averages and trend analysis (SQL Server)
+SELECT
+metric_date,
+metric_type,
+metric_value,
+-- Simple Moving Averages
+AVG(metric_value) OVER (
+PARTITION BY metric_type
+ORDER BY metric_date
+ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+) AS sma_7day,
+AVG(metric_value) OVER (
+PARTITION BY metric_type
+ORDER BY metric_date
+ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
+) AS sma_30day,
+-- Exponential Moving Average approximation
+AVG(metric_value * POWER(0.9, datediff)) OVER (
+PARTITION BY metric_type
+ORDER BY metric_date
+ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
+) / AVG(POWER(0.9, datediff)) OVER (
+PARTITION BY metric_type
+ORDER BY metric_date
+ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
+) AS ema_30day,
+-- Trend indicators
+CASE
+WHEN metric_value > LAG(metric_value, 7) OVER (PARTITION BY metric_type ORDER BY metric_date)
+THEN 'Increasing'
+WHEN metric_value < LAG(metric_value, 7) OVER (PARTITION BY metric_type ORDER BY metric_date)
+THEN 'Decreasing'
+ELSE 'Stable'
+END AS weekly_trend
+FROM (
+SELECT
+metric_date,
+metric_type,
+metric_value,
+DATEDIFF(DAY, MIN(metric_date) OVER (PARTITION BY metric_type), metric_date) AS datediff
+FROM financial_metrics
+) dated_metrics
+WHERE metric_type IN ('revenue', 'costs')
+ORDER BY metric_type, metric_date;
+
+-- Financial KPIs and ratios (SQL Server)
+WITH monthly_financials AS (
+SELECT
+FORMAT(metric_date, 'yyyy-MM') AS month_year,
+SUM(CASE WHEN metric_type = 'revenue' THEN metric_value ELSE 0 END) AS total_revenue,
+SUM(CASE WHEN metric_type = 'costs' THEN metric_value ELSE 0 END) AS total_costs,
+SUM(CASE WHEN metric_type = 'profit' THEN metric_value ELSE 0 END) AS total_profit,
+SUM(CASE WHEN metric_type = 'investment' THEN metric_value ELSE 0 END) AS total_investment,
+SUM(CASE WHEN metric_type = 'cash_flow' THEN metric_value ELSE 0 END) AS operating_cash_flow
+FROM financial_metrics
+GROUP BY FORMAT(metric_date, 'yyyy-MM')
+)
+SELECT
+month_year,
+total_revenue,
+total_costs,
+total_profit,
+ROUND(total_profit / NULLIF(total_revenue, 0) * 100, 2) AS profit_margin_pct,
+ROUND((total_revenue - total_costs) / NULLIF(total_revenue, 0) * 100, 2) AS gross_margin_pct,
+ROUND(100.0 * (total_revenue - LAG(total_revenue) OVER (ORDER BY month_year)) /
+NULLIF(LAG(total_revenue) OVER (ORDER BY month_year), 0), 2) AS revenue_growth_mom
+FROM monthly_financials
+ORDER BY month_year;
+
+-- Volatility and risk analysis (SQL Server)
+SELECT
+FORMAT(metric_date, 'yyyy-MM') AS month_year,
+metric_type,
+COUNT(*) AS data_points,
+ROUND(AVG(metric_value), 2) AS mean_value,
+ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY metric_value) OVER (
+PARTITION BY FORMAT(metric_date, 'yyyy-MM'), metric_type
+), 2) AS median_value,
+ROUND(STDEV(metric_value), 2) AS standard_deviation,
+ROUND(STDEV(metric_value) / NULLIF(AVG(metric_value), 0), 4) AS coefficient_of_variation,
+ROUND(AVG(metric_value) - 1.645 * STDEV(metric_value), 2) AS var_95_pct
+FROM financial_metrics
+GROUP BY FORMAT(metric_date, 'yyyy-MM'), metric_type, metric_value
+ORDER BY month_year, metric_type;
+
+-- SQL Server Notes:
+-- - IDENTITY(1,1) instead of AUTO_INCREMENT
+-- - CHECK constraints instead of ENUM
+-- - FORMAT() instead of DATE_FORMAT()
+-- - PERCENTILE_CONT() OVER() instead of MEDIAN()
+-- - POWER() instead of POW()
+-- - DATEDIFF(DAY, start, end) for date differences
+-- - GETDATE() instead of CURRENT_TIMESTAMP
+-- - STDEV() instead of STDDEV_POP() (approximation)
+*/

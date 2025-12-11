@@ -4,8 +4,10 @@
 USE sample_hr;
 
 -- ===========================================
--- ADVANCED JSON OPERATIONS (MySQL 8.0+, PostgreSQL)
+-- MYSQL VERSION - ADVANCED JSON OPERATIONS
 -- ===========================================
+
+USE sample_hr;
 
 -- Create sophisticated JSON storage for employee analytics data
 DROP TABLE IF EXISTS employee_analytics;
@@ -873,6 +875,8 @@ JSON_EXTRACT_DOUBLE (
 ) AS engagement_change,
 
 -- Network influence score (based on collaborators)
+
+
 JSON_LENGTH(JSON_EXTRACT(ea.social_graph, '$.collaborators')) +
         JSON_LENGTH(JSON_EXTRACT(ea.social_graph, '$.mentorees')) AS influence_score
 
@@ -924,6 +928,8 @@ END AS type_boost,
 ) AS recency_boost,
 
 -- Combined relevance score
+
+
 (MATCH(ek.content) AGAINST('+cloud +migration strategy' IN BOOLEAN MODE) +
          CASE WHEN JSON_CONTAINS(ek.tags, JSON_ARRAY('cloud')) THEN 2.0
               WHEN JSON_CONTAINS(ek.tags, JSON_ARRAY('migration')) THEN 1.5
@@ -978,6 +984,8 @@ SUM(SUM(hours_worked)) OVER (
 ) AS rolling_hours_3month,
 
 -- Growth rates
+
+
 (COUNT(*) - LAG(COUNT(*), 1) OVER (ORDER BY DATE_FORMAT(activity_date, '%Y-%m'))) /
         NULLIF(LAG(COUNT(*), 1) OVER (ORDER BY DATE_FORMAT(activity_date, '%Y-%m')), 0) * 100 AS mom_growth_pct
 
@@ -1011,6 +1019,8 @@ ROUND(
 ) AS forecasted_activities,
 
 -- Forecast confidence interval
+
+
 ROUND(total_activities * (1 + (AVG(mom_growth_pct/100.0) OVER (
             ORDER BY month_year
             ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
@@ -1037,3 +1047,189 @@ SELECT
     END AS forecast_interpretation
 FROM forecast_model
 ORDER BY month_year DESC;
+
+-- ===========================================
+-- POSTGRESQL VERSION - ADVANCED JSON OPERATIONS
+-- ===========================================
+
+/*
+-- PostgreSQL equivalent syntax for JSON operations:
+
+\c sample_hr;
+
+-- PostgreSQL uses JSONB for better performance and indexing
+DROP TABLE IF EXISTS employee_analytics;
+
+CREATE TABLE employee_analytics (
+emp_id INTEGER PRIMARY KEY,
+performance_data JSONB,
+skills_matrix JSONB,
+time_series_metrics JSONB,
+social_graph JSONB,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (emp_id) REFERENCES employee (emp_id)
+);
+
+-- JSON extraction in PostgreSQL:
+SELECT
+e.first_name,
+e.last_name,
+ea.performance_data->>'impact_score' AS impact_score,
+(ea.performance_data->>'goals_achieved')::INTEGER AS goals_achieved,
+jsonb_array_length(ea.performance_data->'quarterly_ratings') AS rating_count,
+ea.performance_data->'quarterly_ratings'->>0 AS latest_quarter_rating
+FROM employee e
+JOIN employee_analytics ea ON e.emp_id = ea.emp_id;
+
+-- JSON path operations (PostgreSQL 12+):
+SELECT
+ea.performance_data #>> '{quarterly_ratings,0}' AS first_rating,
+ea.skills_matrix #>> '{technical,SQL}' AS sql_skill_level
+FROM employee_analytics ea;
+
+-- JSON aggregation and manipulation:
+SELECT
+emp_id,
+jsonb_object_keys(skills_matrix) AS skill_categories,
+jsonb_agg(skill_name) AS all_skills
+FROM (
+SELECT
+emp_id,
+skill_category,
+jsonb_object_keys(skills_matrix->skill_category) AS skill_name
+FROM (
+SELECT emp_id, jsonb_object_keys(skills_matrix) AS skill_category
+FROM employee_analytics
+) cats
+CROSS JOIN employee_analytics ea
+WHERE ea.emp_id = cats.emp_id
+) skill_data
+GROUP BY emp_id, skill_category;
+
+-- Full-text search in PostgreSQL:
+-- Create GIN index for JSONB
+CREATE INDEX idx_employee_analytics_skills ON employee_analytics USING GIN (skills_matrix);
+
+-- JSONB containment and existence queries:
+SELECT * FROM employee_analytics
+WHERE skills_matrix ? 'SQL'  -- Check if key exists
+AND skills_matrix @> '{"technical": {"SQL": 4}}';  -- Check containment
+
+-- PostgreSQL JSONB Notes:
+-- - JSONB is binary JSON, faster than JSON
+-- - -> extracts JSON object field as JSON
+-- - ->> extracts JSON object field as text
+-- - #> extracts by path array
+-- - #>> extracts by path array as text
+-- - ? checks key existence
+-- - @> checks containment
+-- - <@ checks containment (reverse)
+-- - || concatenates JSON objects
+-- - - removes key from JSON object
+*/
+
+-- ===========================================
+-- SQL SERVER VERSION - ADVANCED JSON OPERATIONS
+-- ===========================================
+
+/*
+-- SQL Server equivalent syntax for JSON operations (SQL Server 2016+):
+
+USE sample_hr;
+
+-- SQL Server uses NVARCHAR(MAX) with JSON content type
+DROP TABLE IF EXISTS employee_analytics;
+
+CREATE TABLE employee_analytics (
+emp_id INT PRIMARY KEY,
+performance_data NVARCHAR(MAX) CHECK (ISJSON(performance_data) = 1),
+skills_matrix NVARCHAR(MAX) CHECK (ISJSON(skills_matrix) = 1),
+time_series_metrics NVARCHAR(MAX) CHECK (ISJSON(time_series_metrics) = 1),
+social_graph NVARCHAR(MAX) CHECK (ISJSON(social_graph) = 1),
+created_at DATETIME2 DEFAULT GETDATE(),
+FOREIGN KEY (emp_id) REFERENCES employee (emp_id)
+);
+
+-- JSON value extraction in SQL Server:
+SELECT
+e.first_name,
+e.last_name,
+JSON_VALUE(ea.performance_data, '$.impact_score') AS impact_score,
+CAST(JSON_VALUE(ea.performance_data, '$.goals_achieved') AS INT) AS goals_achieved,
+(
+SELECT COUNT(*)
+FROM OPENJSON(ea.performance_data, '$.quarterly_ratings') ratings
+) AS rating_count,
+JSON_VALUE(ea.performance_data, '$.quarterly_ratings[0]') AS latest_quarter_rating
+FROM employee e
+JOIN employee_analytics ea ON e.emp_id = ea.emp_id;
+
+-- JSON path queries with OPENJSON:
+SELECT
+e.first_name,
+e.last_name,
+tech_ratings.[key] AS skill_name,
+tech_ratings.[value] AS skill_level
+FROM employee e
+JOIN employee_analytics ea ON e.emp_id = ea.emp_id
+CROSS APPLY OPENJSON(ea.skills_matrix, '$.technical') AS tech_ratings
+WHERE CAST(tech_ratings.[value] AS INT) >= 4;
+
+-- JSON modification operations:
+-- Add new skill
+UPDATE employee_analytics
+SET skills_matrix = JSON_MODIFY(skills_matrix, '$.technical.ML', 3)
+WHERE emp_id = 3;
+
+-- Modify existing value
+UPDATE employee_analytics
+SET performance_data = JSON_MODIFY(performance_data, '$.impact_score', 4.8)
+WHERE emp_id = 6;
+
+-- Full-text search with JSON in SQL Server:
+-- Create full-text index on JSON columns
+CREATE FULLTEXT INDEX ON employee_knowledge(content)
+KEY INDEX PK_employee_knowledge;
+
+-- JSON-based search queries:
+SELECT *
+FROM employee_knowledge
+WHERE CONTAINS(content, 'cloud AND migration')
+OR JSON_VALUE(tags, '$[0]') = 'cloud';
+
+-- SQL Server JSON Notes:
+-- - Uses NVARCHAR(MAX) with ISJSON() constraint
+-- - JSON_VALUE() extracts single values
+-- - JSON_QUERY() extracts objects/arrays
+-- - OPENJSON() parses JSON into relational format
+-- - JSON_MODIFY() updates JSON content
+-- - JSON_PATH_EXISTS() checks path existence
+-- - Full-text search works on JSON content
+-- - Computed columns can index JSON paths
+*/
+
+-- ===========================================
+-- CROSS-DATABASE JSON COMPATIBILITY SUMMARY
+-- ===========================================
+
+/*
+JSON Operations Comparison:
+
+| Operation | MySQL 8.0+ | PostgreSQL | SQL Server 2016+ |
+|-----------|------------|------------|------------------|
+| Storage | JSON | JSON/JSONB | NVARCHAR(MAX) + CHECK |
+| Extract Value | JSON_EXTRACT(col, '$.path') | col->>'path' | JSON_VALUE(col, '$.path') |
+| Extract Object | JSON_EXTRACT(col, '$.path') | col->'path' | JSON_QUERY(col, '$.path') |
+| Array Length | JSON_LENGTH(col->'array') | jsonb_array_length(col) | (SELECT COUNT(*) FROM OPENJSON(col, '$.array')) |
+| Path Exists | JSON_CONTAINS_PATH(col, 'one', '$.path') | col ? 'key' | JSON_PATH_EXISTS(col, '$.path') |
+| Containment | JSON_CONTAINS(col, value) | col @> value | col LIKE '%value%' (limited) |
+| Modification | JSON_SET/JSON_REPLACE | jsonb_set() | JSON_MODIFY() |
+| Indexing | Generated columns | GIN indexes | Computed columns |
+| Full-text | MATCH() AGAINST() | Full-text search | CONTAINS() |
+
+Key Takeaways:
+- PostgreSQL JSONB offers best performance and features
+- MySQL 8.0+ has good JSON support but limited indexing
+- SQL Server JSON is more limited, better for simple operations
+- Always validate JSON structure in application layer when possible
+*/

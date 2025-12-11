@@ -18,29 +18,85 @@
 
 ## 📚 Repository Structure
 
+**Clean, Modular Architecture:**
+
+### 🎯 Syntax References (Quick Lookups)
 ```
-├── curriculum/basics/          # 12-week learning curriculum
-│   ├── 00_learning_path.md    # Master roadmap (12 weeks)
-│   ├── 01-09_schema_ddl.sql   # Core SQL fundamentals
-│   ├── 10_advanced_analytics.sql    # NTILE, PERCENT_RANK, CORR
-│   ├── 11_modern_sql_features.sql   # JSON, arrays, full-text search
-│   ├── quick_reference_guide.md     # Complete syntax reference
-│   ├── interview_checklist.md        # Pre/post-interview checklist
-│   └── timed_mock_problems.md        # 10 timed practice scenarios
-│
-├── problems/                  # 14 interview problem sets
-│   ├── 01-12_*.md,.sql        # Core technical problems
-│   ├── 13_advanced_analytics.md,.sql   # Statistical analysis
-│   └── 14_ecommerce_analytics.md       # Business intelligence
-│
-├── examples/                  # Sample data & utilities
-│   ├── seed_sample_hr.sql     # Realistic HR database
-│   └── load_sample_data.sh    # One-click data loading
-│
-└── documentation/             # Comprehensive docs
-    ├── COVERAGE.md           # Complete feature matrix
-    └── README.md             # This file
+syntax/
+├── mysql/README.md          # MySQL syntax & setup guide
+├── postgresql/README.md     # PostgreSQL syntax & setup guide
+└── sql-server/README.md     # SQL Server syntax & setup guide
 ```
+
+### 📖 Learning Guides
+```
+guides/
+└── quick-start.md           # Complete setup & learning guide
+```
+
+### 🎓 Comprehensive Curriculum
+```
+curriculum/
+├── foundational/            # DDL, CRUD, JOINs, aggregation
+├── intermediate/            # Window functions, CTEs, transactions
+├── advanced/                # Stored procedures, analytics, modern SQL
+└── specialized/             # Cloud warehousing, financial analytics
+```
+
+### 🏆 Practice & Examples
+```
+problems/                    # 14 interview problem sets
+examples/                    # Sample data & runnable scripts
+```
+
+### 📚 Documentation
+```
+MULTI_DATABASE_SUPPORT.md    # Syntax comparison across databases
+MIGRATION_GUIDE.md          # Switching between learning paths
+README.md                   # This overview
+```
+
+## 🚀 Quick Start (3 Minutes)
+
+```bash
+# 1. Choose your database
+cd syntax/mysql/           # or postgresql/ or sql-server/
+cat README.md              # Get setup instructions
+
+# 2. Follow the quick start guide
+cd ../../guides/
+cat quick-start.md         # Complete learning guide
+
+# 3. Start learning
+cd ../curriculum/foundational/
+# Run examples in your database
+```
+
+## 🎯 Learning Paths
+
+### Path 1: Single Database Focus (Recommended for beginners)
+**Perfect if:** You're learning SQL from scratch or specialize in one database
+
+1. **Choose your database:** `syntax/mysql/` or `syntax/postgresql/` or `syntax/sql-server/`
+2. **Follow setup guide:** Each README.md has complete installation & configuration
+3. **Learn progressively:** Use `curriculum/` files with your database's syntax
+4. **Reference as needed:** Quick lookups in your database's syntax guide
+
+### Path 2: Cross-Database Comparison (Advanced learners)
+**Perfect if:** You work with multiple databases or prepare for interviews
+
+1. **Study differences:** Read `MULTI_DATABASE_SUPPORT.md`
+2. **Use curriculum files:** Each contains examples for all 3 databases
+3. **Compare syntax:** See equivalent operations side-by-side
+4. **Understand trade-offs:** Learn when to use each database
+
+### Path 3: Reference & Problem Solving
+**Perfect if:** You're experienced and need quick references
+
+1. **Quick syntax lookup:** Use `syntax/*/README.md` files
+2. **Practice problems:** Solve challenges in `problems/`
+3. **Advanced topics:** Explore `curriculum/advanced/` and `curriculum/specialized/`
+4. **Compare databases:** Use `MULTI_DATABASE_SUPPORT.md`
 
 ## 🎓 Learning Pathways
 
@@ -96,7 +152,7 @@ Week 4: Perfection & Mock Interviews
 ### 🏗️ Infrastructure & Data
 - **Realistic Sample Database**: HR schema with 200+ rows across 6 tables
 - **Production-Quality Code**: Optimized queries with proper indexing
-- **Multiple Dialect Support**: MySQL, PostgreSQL, SQL Server examples
+- **Multiple Dialect Support**: MySQL, PostgreSQL, SQL Server examples with detailed syntax differences
 - **Automated Setup**: One-command database loading script
 
 ### 📚 Learning Resources

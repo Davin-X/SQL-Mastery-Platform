@@ -2,7 +2,24 @@
 -- MASTER CLASS: Cloud-Native SQL — BigQuery, Snowflake, Redshift Optimization
 -- Partitioning, clustering, semi-structured data, and cloud-specific performance
 
+-- ===========================================
+-- MYSQL VERSION (Traditional RDBMS)
+-- ===========================================
+
 USE sample_hr;
+
+-- Traditional MySQL approach for comparison
+DROP TABLE IF EXISTS activity_log_partitioned;
+
+CREATE TABLE activity_log_partitioned (
+    emp_id INT,
+    activity_date DATE,
+    activity_type VARCHAR(50),
+    hours_logged DECIMAL(4, 2),
+    metadata JSON,
+    INDEX idx_activity_date (activity_date),
+    INDEX idx_activity_type_date (activity_type, activity_date)
+);
 
 -- ===========================================
 -- BIGQUERY-SPECIFIC OPTIMIZATION
@@ -468,3 +485,192 @@ GROUP BY
     DATE_TRUNC (activity_date, MONTH),
     activity_type
 ORDER BY month DESC, approx_active_users DESC;
+
+-- ===========================================
+-- POSTGRESQL VERSION (Traditional RDBMS Approach)
+-- ===========================================
+
+/*
+-- PostgreSQL equivalent for cloud data warehousing concepts:
+
+\c sample_hr;
+
+-- PostgreSQL partitioning (similar to BigQuery partitioning)
+CREATE TABLE activity_log_partitioned (
+emp_id INTEGER,
+activity_date DATE,
+activity_type VARCHAR(50),
+hours_logged DECIMAL(4, 2),
+metadata JSONB
+) PARTITION BY RANGE (activity_date);
+
+-- Create partitions for different date ranges
+CREATE TABLE activity_log_2024_q1 PARTITION OF activity_log_partitioned
+FOR VALUES FROM ('2024-01-01') TO ('2024-04-01');
+
+CREATE TABLE activity_log_2024_q2 PARTITION OF activity_log_partitioned
+FOR VALUES FROM ('2024-04-01') TO ('2024-07-01');
+
+-- Create indexes on partitioned tables
+CREATE INDEX idx_activity_date ON activity_log_partitioned (activity_date);
+CREATE INDEX idx_activity_type ON activity_log_partitioned (activity_type);
+CREATE INDEX idx_metadata_gin ON activity_log_partitioned USING GIN (metadata);
+
+-- Optimized partitioned query (partition pruning)
+SELECT
+activity_type,
+DATE_TRUNC('month', activity_date) AS month,
+COUNT(*) AS activities,
+SUM(hours_logged) AS total_hours,
+ROUND(AVG(hours_logged), 2) AS avg_hours
+FROM activity_log_partitioned
+WHERE activity_date BETWEEN '2024-01-01' AND '2024-03-31'
+GROUP BY activity_type, DATE_TRUNC('month', activity_date)
+ORDER BY month, activities DESC;
+
+-- JSON operations in PostgreSQL
+SELECT
+emp_id,
+metadata->>'activity_type' AS activity_type,
+(metadata->>'hours_logged')::DECIMAL AS hours_logged,
+metadata->'tags' AS tags_array,
+jsonb_array_length(metadata->'tags') AS tag_count
+FROM activity_log_partitioned
+WHERE metadata ? 'tags';  -- Check if tags key exists
+
+-- PostgreSQL advanced analytics
+SELECT
+DATE_TRUNC('month', activity_date) AS month,
+activity_type,
+COUNT(*) AS activities,
+SUM(hours_logged) AS total_hours,
+ROUND(AVG(hours_logged), 2) AS avg_hours,
+PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY hours_logged) AS median_hours
+FROM activity_log_partitioned
+WHERE activity_date >= CURRENT_DATE - INTERVAL '6 months'
+GROUP BY DATE_TRUNC('month', activity_date), activity_type
+ORDER BY month DESC, total_hours DESC;
+
+-- PostgreSQL Notes:
+-- - PARTITION BY RANGE for time-based partitioning
+-- - JSONB for better performance than JSON
+-- - GIN indexes for JSONB operations
+-- - DATE_TRUNC() instead of DATE_TRUNC
+-- - PERCENTILE_CONT() for statistical functions
+-- - INTERVAL syntax for date arithmetic
+*/
+
+-- ===========================================
+-- SQL SERVER VERSION (Traditional RDBMS Approach)
+-- ===========================================
+
+/*
+-- SQL Server equivalent for cloud data warehousing concepts:
+
+USE sample_hr;
+
+-- SQL Server partitioning (similar to BigQuery partitioning)
+-- Create partition function and scheme
+CREATE PARTITION FUNCTION pf_activity_date (DATE)
+AS RANGE RIGHT FOR VALUES ('2024-01-01', '2024-04-01', '2024-07-01');
+
+CREATE PARTITION SCHEME ps_activity_date
+AS PARTITION pf_activity_date TO (fg_2023, fg_2024_q1, fg_2024_q2, fg_future);
+
+-- Create partitioned table
+CREATE TABLE activity_log_partitioned (
+emp_id INT,
+activity_date DATE,
+activity_type VARCHAR(50),
+hours_logged DECIMAL(4, 2),
+metadata NVARCHAR(MAX)
+) ON ps_activity_date(activity_date);
+
+-- Create indexes including filtered indexes for performance
+CREATE CLUSTERED INDEX idx_activity_date ON activity_log_partitioned (activity_date);
+CREATE NONCLUSTERED INDEX idx_activity_type ON activity_log_partitioned (activity_type);
+CREATE NONCLUSTERED INDEX idx_metadata_json ON activity_log_partitioned (metadata)
+WHERE ISJSON(metadata) = 1;
+
+-- Optimized partitioned query
+SELECT
+activity_type,
+DATEPART(YEAR, activity_date) * 100 + DATEPART(MONTH, activity_date) AS month,
+COUNT(*) AS activities,
+SUM(hours_logged) AS total_hours,
+ROUND(AVG(hours_logged), 2) AS avg_hours
+FROM activity_log_partitioned
+WHERE activity_date BETWEEN '2024-01-01' AND '2024-03-31'
+GROUP BY activity_type, DATEPART(YEAR, activity_date) * 100 + DATEPART(MONTH, activity_date)
+ORDER BY month, activities DESC;
+
+-- JSON operations in SQL Server
+SELECT
+emp_id,
+JSON_VALUE(metadata, '$.activity_type') AS activity_type,
+CAST(JSON_VALUE(metadata, '$.hours_logged') AS DECIMAL(4,2)) AS hours_logged,
+JSON_QUERY(metadata, '$.tags') AS tags_array,
+(
+SELECT COUNT(*)
+FROM OPENJSON(metadata, '$.tags')
+) AS tag_count
+FROM activity_log_partitioned
+WHERE JSON_PATH_EXISTS(metadata, '$.tags') = 1;  -- Check if tags path exists
+
+-- SQL Server advanced analytics with window functions
+SELECT
+DATEPART(YEAR, activity_date) * 100 + DATEPART(MONTH, activity_date) AS month,
+activity_type,
+COUNT(*) AS activities,
+SUM(hours_logged) AS total_hours,
+ROUND(AVG(hours_logged), 2) AS avg_hours,
+PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY hours_logged)
+OVER (PARTITION BY DATEPART(YEAR, activity_date) * 100 + DATEPART(MONTH, activity_date), activity_type) AS median_hours
+FROM activity_log_partitioned
+WHERE activity_date >= DATEADD(MONTH, -6, GETDATE())
+GROUP BY DATEPART(YEAR, activity_date) * 100 + DATEPART(MONTH, activity_date), activity_type, hours_logged
+ORDER BY month DESC, total_hours DESC;
+
+-- SQL Server Notes:
+-- - Partition functions and schemes for advanced partitioning
+-- - FILEGROUP placement for performance optimization
+-- - Filtered indexes for JSON columns
+-- - DATEPART() and DATEADD() for date operations
+-- - OPENJSON() for parsing JSON arrays
+-- - ISJSON() constraint for JSON validation
+-- - PERCENTILE_CONT() OVER() for statistical calculations
+*/
+
+-- ===========================================
+-- CROSS-PLATFORM CLOUD WAREHOUSING COMPARISON
+-- ===========================================
+
+/*
+Cloud Data Warehousing Platforms Comparison:
+
+| Feature | BigQuery | Snowflake | Redshift | PostgreSQL | SQL Server |
+|---------|----------|-----------|----------|------------|------------|
+| Partitioning | PARTITION BY DATE | Automatic clustering | DISTKEY/SORTKEY | PARTITION BY RANGE | Partition schemes |
+| JSON Storage | JSON | VARIANT | SUPER | JSONB | NVARCHAR(MAX) |
+| Date Functions | DATE_TRUNC | DATE_TRUNC | DATE_TRUNC | DATE_TRUNC | DATEPART/DATEADD |
+| Approximate Agg | APPROX_* functions | APPROX_* functions | APPROXIMATE COUNT | Manual calculation | Manual calculation |
+| ML Integration | BigQuery ML | Snowflake ML | Redshift ML | Extensions | Azure ML |
+| Time Travel | Limited | Yes (up to 90 days) | No | No | No |
+| Storage Cost | Very low | Medium | Medium | Variable | Variable |
+| Query Performance | Excellent | Excellent | Good | Good | Good |
+| Ecosystem | GCP | Multi-cloud | AWS | Open source | Microsoft |
+
+Key Takeaways:
+- BigQuery excels at massive scale with automatic optimization
+- Snowflake offers excellent time travel and multi-cloud support
+- Redshift provides deep AWS integration and columnar optimization
+- PostgreSQL offers flexibility with partitioning and extensions
+- SQL Server provides enterprise-grade features with JSON support
+
+Choose based on:
+- Cloud provider preference
+- Data volume and performance requirements
+- Budget constraints
+- Existing infrastructure and skills
+- Specific feature requirements (ML, time travel, etc.)
+*/

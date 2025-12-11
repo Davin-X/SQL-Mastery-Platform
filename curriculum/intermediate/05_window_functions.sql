@@ -2,6 +2,10 @@
 -- MASTER CLASS: Window Functions — The Secret Weapon of SQL Analytics
 -- Framing, partitioning, and analytical functions for complex business queries
 
+-- ===========================================
+-- MYSQL VERSION
+-- ===========================================
+
 USE sample_hr;
 
 -- ===========================================
@@ -635,4 +639,235 @@ Key Performance Insights for Window Functions:
 - Multiple window functions on same query? Combine into one pass
 - Need partition-specific calculations? Consider CTEs
 - Complex ordered operations? Ensure supporting indexes
+*/
+
+-- ===========================================
+-- POSTGRESQL VERSION
+-- ===========================================
+
+/*
+-- PostgreSQL equivalent syntax and differences:
+
+-- Connect to database
+\c sample_hr;
+
+-- Note: PostgreSQL supports all the same window functions as MySQL
+-- Key differences are in date functions and string formatting
+
+-- Date formatting differences:
+-- MySQL: DATE_FORMAT(hire_date, '%Y-%m')
+-- PostgreSQL: TO_CHAR(hire_date, 'YYYY-MM')
+
+-- Date difference:
+-- MySQL: DATEDIFF(date1, date2)
+-- PostgreSQL: date1 - date2 (returns interval) or EXTRACT(DAY FROM date1 - date2)
+
+-- LEAD/LAG date difference example:
+SELECT
+employee_id,
+first_name,
+hire_date,
+LEAD(first_name) OVER (ORDER BY hire_date) AS next_hire_name,
+LEAD(hire_date) OVER (ORDER BY hire_date) AS next_hire_date,
+EXTRACT(DAY FROM LEAD(hire_date) OVER (ORDER BY hire_date) - hire_date) AS days_until_next_hire
+FROM employee
+ORDER BY hire_date;
+
+-- Monthly hiring trends (PostgreSQL version):
+SELECT
+TO_CHAR(hire_date, 'YYYY-MM') AS hire_month,
+EXTRACT(YEAR FROM hire_date) AS hire_year,
+EXTRACT(MONTH FROM hire_date) AS hire_month_num,
+COUNT(*) AS hires,
+SUM(COUNT(*)) OVER (ORDER BY TO_CHAR(hire_date, 'YYYY-MM')) AS cumulative_hires,
+ROUND(
+AVG(COUNT(*)) OVER (
+ORDER BY TO_CHAR(hire_date, 'YYYY-MM') ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+),
+1
+) AS rolling_12month_avg,
+COUNT(*) - LAG(COUNT(*)) OVER (ORDER BY TO_CHAR(hire_date, 'YYYY-MM')) AS month_over_month_change,
+ROUND(
+100.0 * (COUNT(*) - LAG(COUNT(*)) OVER (ORDER BY TO_CHAR(hire_date, 'YYYY-MM'))) /
+NULLIF(LAG(COUNT(*)) OVER (ORDER BY TO_CHAR(hire_date, 'YYYY-MM')), 0),
+1
+) AS mom_growth_pct
+FROM employee
+GROUP BY TO_CHAR(hire_date, 'YYYY-MM'), EXTRACT(YEAR FROM hire_date), EXTRACT(MONTH FROM hire_date)
+ORDER BY hire_month;
+
+-- Gaps analysis (PostgreSQL date difference):
+WITH activity_gaps AS (
+SELECT
+emp_id,
+activity_date,
+LEAD(activity_date) OVER (PARTITION BY emp_id ORDER BY activity_date) AS next_activity,
+EXTRACT(DAY FROM LEAD(activity_date) OVER (PARTITION BY emp_id ORDER BY activity_date) - activity_date) AS days_between
+FROM employee_activity
+)
+SELECT
+emp_id,
+activity_date,
+next_activity,
+days_between,
+CASE
+WHEN days_between > 2 THEN 'Large Gap (>2 days)'
+WHEN days_between > 1 THEN 'Small Gap (2 days)'
+ELSE 'Consecutive'
+END AS gap_category
+FROM activity_gaps
+WHERE next_activity IS NOT NULL
+ORDER BY emp_id, activity_date;
+
+-- Islands analysis (PostgreSQL date difference):
+WITH island_markers AS (
+SELECT
+emp_id,
+activity_date,
+EXTRACT(DAY FROM activity_date - LAG(activity_date) OVER (PARTITION BY emp_id ORDER BY activity_date)) AS days_diff
+FROM employee_activity
+),
+islands AS (
+SELECT
+emp_id,
+activity_date,
+SUM(CASE WHEN days_diff > 1 OR days_diff IS NULL THEN 1 ELSE 0 END)
+OVER (PARTITION BY emp_id ORDER BY activity_date) AS island_id
+FROM island_markers
+)
+SELECT
+emp_id,
+island_id,
+MIN(activity_date) AS island_start,
+MAX(activity_date) AS island_end,
+COUNT(*) AS activity_days,
+EXTRACT(DAY FROM MAX(activity_date) - MIN(activity_date)) + 1 AS total_days,
+SUM(hours_logged) AS total_hours
+FROM islands i
+JOIN employee_activity ea ON i.emp_id = ea.emp_id AND i.activity_date = ea.activity_date
+GROUP BY emp_id, island_id
+ORDER BY emp_id, island_start;
+
+-- PostgreSQL Notes:
+-- - Same window function syntax as MySQL
+-- - DATE_FORMAT() → TO_CHAR()
+-- - DATEDIFF() → EXTRACT(DAY FROM date1 - date2)
+-- - Use \c to connect to database
+-- - INTERVAL operations: date + INTERVAL '1 day'
+*/
+
+-- ===========================================
+-- SQL SERVER VERSION
+-- ===========================================
+
+/*
+-- SQL Server equivalent syntax and differences:
+
+-- Use database
+USE sample_hr;
+
+-- Note: SQL Server supports all the same window functions
+-- Key differences in date functions and some syntax
+
+-- Date formatting differences:
+-- MySQL: DATE_FORMAT(hire_date, '%Y-%m')
+-- SQL Server: FORMAT(hire_date, 'yyyy-MM') or CONVERT(VARCHAR(7), hire_date, 120)
+
+-- Date difference:
+-- MySQL: DATEDIFF(date1, date2)
+-- SQL Server: DATEDIFF(DAY, date2, date1)
+
+-- LEAD/LAG date difference example:
+SELECT
+employee_id,
+first_name,
+hire_date,
+LEAD(first_name) OVER (ORDER BY hire_date) AS next_hire_name,
+LEAD(hire_date) OVER (ORDER BY hire_date) AS next_hire_date,
+DATEDIFF(DAY, hire_date, LEAD(hire_date) OVER (ORDER BY hire_date)) AS days_until_next_hire
+FROM employee
+ORDER BY hire_date;
+
+-- Monthly hiring trends (SQL Server version):
+SELECT
+FORMAT(hire_date, 'yyyy-MM') AS hire_month,
+YEAR(hire_date) AS hire_year,
+MONTH(hire_date) AS hire_month_num,
+COUNT(*) AS hires,
+SUM(COUNT(*)) OVER (ORDER BY FORMAT(hire_date, 'yyyy-MM')) AS cumulative_hires,
+ROUND(
+AVG(COUNT(*)) OVER (
+ORDER BY FORMAT(hire_date, 'yyyy-MM') ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+),
+1
+) AS rolling_12month_avg,
+COUNT(*) - LAG(COUNT(*)) OVER (ORDER BY FORMAT(hire_date, 'yyyy-MM')) AS month_over_month_change,
+ROUND(
+100.0 * (COUNT(*) - LAG(COUNT(*)) OVER (ORDER BY FORMAT(hire_date, 'yyyy-MM'))) /
+NULLIF(LAG(COUNT(*)) OVER (ORDER BY FORMAT(hire_date, 'yyyy-MM')), 0),
+1
+) AS mom_growth_pct
+FROM employee
+GROUP BY FORMAT(hire_date, 'yyyy-MM'), YEAR(hire_date), MONTH(hire_date)
+ORDER BY hire_month;
+
+-- Gaps analysis (SQL Server date difference):
+WITH activity_gaps AS (
+SELECT
+emp_id,
+activity_date,
+LEAD(activity_date) OVER (PARTITION BY emp_id ORDER BY activity_date) AS next_activity,
+DATEDIFF(DAY, activity_date, LEAD(activity_date) OVER (PARTITION BY emp_id ORDER BY activity_date)) AS days_between
+FROM employee_activity
+)
+SELECT
+emp_id,
+activity_date,
+next_activity,
+days_between,
+CASE
+WHEN days_between > 2 THEN 'Large Gap (>2 days)'
+WHEN days_between > 1 THEN 'Small Gap (2 days)'
+ELSE 'Consecutive'
+END AS gap_category
+FROM activity_gaps
+WHERE next_activity IS NOT NULL
+ORDER BY emp_id, activity_date;
+
+-- Islands analysis (SQL Server date difference):
+WITH island_markers AS (
+SELECT
+emp_id,
+activity_date,
+DATEDIFF(DAY, LAG(activity_date) OVER (PARTITION BY emp_id ORDER BY activity_date), activity_date) AS days_diff
+FROM employee_activity
+),
+islands AS (
+SELECT
+emp_id,
+activity_date,
+SUM(CASE WHEN days_diff > 1 OR days_diff IS NULL THEN 1 ELSE 0 END)
+OVER (PARTITION BY emp_id ORDER BY activity_date) AS island_id
+FROM island_markers
+)
+SELECT
+emp_id,
+island_id,
+MIN(activity_date) AS island_start,
+MAX(activity_date) AS island_end,
+COUNT(*) AS activity_days,
+DATEDIFF(DAY, MIN(activity_date), MAX(activity_date)) + 1 AS total_days,
+SUM(hours_logged) AS total_hours
+FROM islands i
+JOIN employee_activity ea ON i.emp_id = ea.emp_id AND i.activity_date = ea.activity_date
+GROUP BY emp_id, island_id
+ORDER BY emp_id, island_start;
+
+-- SQL Server Notes:
+-- - Same window function syntax as MySQL
+-- - DATE_FORMAT() → FORMAT() or CONVERT()
+-- - DATEDIFF() has different parameter order: DATEDIFF(unit, start_date, end_date)
+-- - Same USE syntax as MySQL
+-- - DATEADD() for date arithmetic: DATEADD(DAY, 1, date)
+-- - GETDATE() instead of NOW()
 */

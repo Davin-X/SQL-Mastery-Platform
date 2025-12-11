@@ -49,12 +49,18 @@ GROUP BY
     salary
 ORDER BY salary;
 
+-- ===========================================
+-- MYSQL VERSION - MEDIAN & PERCENTILES
+-- ===========================================
+
+USE sample_hr;
+
 -- MEDIAN calculation using window functions
--- (In PostgreSQL/MySQL 8+: use MEDIAN() or PERCENTILE_CONT(0.5))
+-- (MySQL 8.0+: PERCENTILE_CONT within GROUP BY)
 SELECT
     department,
     AVG(salary) AS avg_salary,
-    -- Manual median calculation
+    -- Manual median calculation for older MySQL versions
     PERCENTILE_CONT (0.5) WITHIN GROUP (
         ORDER BY salary
     ) AS median_salary,
@@ -69,6 +75,72 @@ FROM employee e
 GROUP BY
     department;
 
+-- ===========================================
+-- POSTGRESQL VERSION - MEDIAN & PERCENTILES
+-- ===========================================
+
+/*
+-- PostgreSQL equivalent syntax:
+
+\c sample_hr;
+
+-- PostgreSQL percentile functions (same as MySQL 8.0+)
+SELECT
+department,
+AVG(salary) AS avg_salary,
+PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) AS median_salary,
+PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY salary) AS q1_salary,
+PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary) AS q3_salary
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id
+GROUP BY department;
+
+-- Alternative: Use window functions for manual calculation
+SELECT DISTINCT
+department,
+AVG(salary) OVER (PARTITION BY department) AS avg_salary,
+PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY department) AS median_salary
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id;
+*/
+
+-- ===========================================
+-- SQL SERVER VERSION - MEDIAN & PERCENTILES
+-- ===========================================
+
+/*
+-- SQL Server equivalent syntax:
+
+USE sample_hr;
+
+-- SQL Server percentile functions (2012+)
+SELECT
+department,
+AVG(salary) AS avg_salary,
+PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY department) AS median_salary,
+PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY department) AS q1_salary,
+PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary) OVER (PARTITION BY department) AS q3_salary
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id;
+
+-- Alternative manual calculation for older versions:
+-- Use ROW_NUMBER and subqueries for median calculation
+WITH ranked_salaries AS (
+SELECT
+department,
+salary,
+ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary) AS rn,
+COUNT(*) OVER (PARTITION BY department) AS cnt
+FROM employee e
+JOIN department d ON e.dept_id = d.dept_id
+)
+SELECT
+department,
+AVG(CASE WHEN rn IN ((cnt + 1)/2, (cnt + 2)/2) THEN salary END) AS median_salary
+FROM ranked_salaries
+GROUP BY department;
+*/
+
 -- STRING_AGG for concatenated lists (useful for reporting)
 SELECT
     dept_name,
@@ -82,6 +154,10 @@ FROM employee e
     JOIN department d ON e.dept_id = d.dept_id
 GROUP BY
     dept_name;
+
+-- ===========================================
+-- MYSQL VERSION - CORRELATION
+-- ===========================================
 
 -- CORR: Correlation coefficient between salary and experience years
 -- (Assumes hire_date exists; calculating experience years)
@@ -98,6 +174,68 @@ SELECT
     CORR (salary, years_experience) AS salary_exp_correlation,
     COUNT(*) AS sample_size
 FROM employee_experience;
+
+-- ===========================================
+-- POSTGRESQL VERSION - CORRELATION
+-- ===========================================
+
+/*
+-- PostgreSQL correlation function:
+
+\c sample_hr;
+
+WITH employee_experience AS (
+SELECT
+emp_id,
+first_name,
+salary,
+EXTRACT(YEAR FROM AGE(CURRENT_DATE, hire_date)) AS years_experience
+FROM employee
+)
+SELECT
+CORR(salary, years_experience) AS salary_exp_correlation,
+COUNT(*) AS sample_size
+FROM employee_experience;
+
+-- PostgreSQL Notes:
+-- - EXTRACT(YEAR FROM AGE(end_date, start_date)) instead of TIMESTAMPDIFF
+-- - AGE() returns interval, EXTRACT gets years
+-- - CORR() function works the same way
+*/
+
+-- ===========================================
+-- SQL SERVER VERSION - CORRELATION
+-- ===========================================
+
+/*
+-- SQL Server correlation calculation:
+
+USE sample_hr;
+
+WITH employee_experience AS (
+SELECT
+emp_id,
+first_name,
+salary,
+DATEDIFF(YEAR, hire_date, GETDATE()) AS years_experience
+FROM employee
+)
+SELECT
+-- Manual correlation calculation for older SQL Server versions
+(AVG(salary * years_experience) - AVG(salary) * AVG(years_experience)) /
+(STDEV(salary) * STDEV(years_experience)) AS salary_exp_correlation,
+COUNT(*) AS sample_size
+FROM employee_experience;
+
+-- Alternative: Use built-in CORR function in SQL Server 2022+
+-- SELECT CORR(salary, years_experience) AS salary_exp_correlation FROM employee_experience;
+
+-- SQL Server Notes:
+-- - DATEDIFF(YEAR, start_date, end_date) instead of TIMESTAMPDIFF
+-- - GETDATE() instead of CURDATE()
+-- - CORR() function available in SQL Server 2022+
+-- - Manual calculation using STDEV() for older versions
+*/
 
 -- Exercises:
 -- 1) Use NTILE to create top/middle/bottom salary tiers and analyze distribution
