@@ -1,0 +1,18 @@
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Database files
+*.db
+*.sqlite
+*.sqlitedb
+
+# IDE files
+.idea/
+*.iml
+.vscode/settings.json
+
+# OS files
+.DS_Store
+Thumbs.db
