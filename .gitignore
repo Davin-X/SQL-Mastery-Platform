@@ -16,3 +16,48 @@ Thumbs.db
 # OS files
 .DS_Store
 Thumbs.db
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.idea/
+*.iml
+.vscode/settings.json
+.project
+.classpath
+
+# Build directories
+target/
+build/
+dist/
+out/
+.gradle/
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.db
+*.sqlite
+*.sqlitedb
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
