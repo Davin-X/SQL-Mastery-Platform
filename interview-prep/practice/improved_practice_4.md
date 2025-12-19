@@ -218,31 +218,3 @@ LIMIT 1;
 **Expected Output**: IT department with 5 employees
 
 ## Key Concepts Covered
-
-- **Basic SELECT**: Column selection and table queries
-- **DISTINCT**: Removing duplicate values
-- **WHERE clauses**: Filtering with conditions (=, IN)
-- **JOIN operations**: INNER JOIN for related data
-- **Aggregate functions**: COUNT, SUM, AVG
-- **GROUP BY**: Grouping data for analysis
-- **HAVING**: Filtering grouped results
-- **Subqueries**: Nested queries for complex conditions
-- **ORDER BY**: Sorting results
-- **LIMIT**: Restricting result rows
-
-## Interview Tips
-
-- **Start simple**: Master basic SELECT before complex queries
-- **Understand JOINs**: Know when to use different JOIN types
-- **Practice filtering**: WHERE vs HAVING usage
-- **Think about performance**: Consider indexes on commonly filtered columns
-- **Check for NULLs**: Be aware of NULL handling in comparisons
-
-## Real-World Application
-
-These exercises cover fundamental SQL operations used daily in:
-- Employee management systems
-- Department budget tracking
-- HR analytics and reporting
-- Organizational data analysis
-- Business intelligence dashboards

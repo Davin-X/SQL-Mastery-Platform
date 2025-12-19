@@ -270,31 +270,3 @@ DROP INDEX INDEX_WAREHOUSE;
 **Result**: Index removed from Warehouse column
 
 ## Key Concepts Covered
-
-- **Basic SELECT**: Table queries and column selection
-- **Filtering**: WHERE clauses with comparisons
-- **DISTINCT**: Removing duplicates
-- **Aggregations**: AVG, COUNT with GROUP BY and HAVING
-- **JOINs**: INNER JOIN and LEFT JOIN operations
-- **Subqueries**: Nested queries and correlated subqueries
-- **DML Operations**: INSERT, UPDATE, DELETE statements
-- **Index Management**: CREATE INDEX and DROP INDEX
-- **Cross-Platform**: SQL variations for different databases
-
-## Interview Tips
-
-- **JOIN Performance**: Understand when different JOIN types are appropriate
-- **Index Strategy**: Know when and how to create indexes
-- **Subquery Usage**: Correlated vs non-correlated subqueries
-- **Aggregate Functions**: GROUP BY and HAVING clause usage
-- **Data Modification**: ACID properties and transaction safety
-
-## Real-World Application
-
-These exercises cover essential SQL operations used in:
-- Inventory management systems
-- Warehouse operations
-- E-commerce platforms
-- Supply chain management
-- Database administration tasks
-- Business intelligence reporting
