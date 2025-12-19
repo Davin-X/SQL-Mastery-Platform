@@ -148,33 +148,3 @@ CREATE MATERIALIZED VIEW points_table AS
 SELECT * FROM [above complex query];
 ```
 
-## Interview Tips
-
-- **Business context**: Points tables are critical for tournament management
-- **Data integrity**: Ensure all matches have proper winners recorded
-- **Performance**: Complex aggregations need proper indexing
-- **Tie-breaking**: Understand ranking rules (points, then NRR, etc.)
-- **Scalability**: Design for large tournaments with many teams
-
-## Real-World Applications
-
-- **Sports analytics**: Tournament standings and qualification
-- **League management**: Points tables for soccer, cricket, etc.
-- **Business KPIs**: Performance dashboards and rankings
-- **Gaming**: Leaderboards and competitive rankings
-- **Education**: Grade calculations and rankings
-
-## Tournament Rules
-
-- **Win**: 2 points
-- **Tie/No result**: 1 point each (simplified)
-- **Loss**: 0 points
-- **Qualification**: Top teams advance based on points, then tie-breakers
-
-## Key SQL Concepts
-
-- **UNION ALL**: Combining batting and bowling statistics
-- **Window functions**: ROW_NUMBER for rankings
-- **Complex aggregations**: Multiple levels of grouping
-- **Case statements**: Conditional logic for points calculation
-- **CTE usage**: Breaking down complex business logic

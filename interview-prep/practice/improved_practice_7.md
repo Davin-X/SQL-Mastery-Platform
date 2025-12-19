@@ -201,9 +201,6 @@ WHERE Provider = 'RBT';
 
 **Result**: All supply relationships for RBT removed (provider still exists)
 
-## Key Concepts Demonstrated
-
-### Complex Multi-Table Relationships
 - **Many-to-many relationships**: Pieces ↔ Providers via Provides table
 - **Foreign key constraints**: Maintaining referential integrity
 - **Composite primary keys**: (Piece, Provider) uniqueness
@@ -232,7 +229,6 @@ FROM Pieces INNER JOIN Provides ON Pieces.Code = Piece
 WHERE Price = (SELECT MAX(Price) FROM Provides WHERE Piece = Pieces.Code);
 ```
 
-## Interview Tips
 
 - **Many-to-many relationships**: Understand junction tables and their queries
 - **GROUP BY with JOINs**: Be careful about non-aggregated columns
@@ -240,7 +236,6 @@ WHERE Price = (SELECT MAX(Price) FROM Provides WHERE Piece = Pieces.Code);
 - **EXISTS vs IN**: Performance implications for different scenarios
 - **Business logic**: Supply chain queries are common in interviews
 
-## Real-World Applications
 
 These patterns are essential for:
 - **Supply chain management**: Products, suppliers, pricing
@@ -249,30 +244,12 @@ These patterns are essential for:
 - **Retail**: Items, distributors, pricing
 - **Any many-to-many relationship** with pricing/cost data
 
-## Common Mistakes
-
-1. **Incorrect GROUP BY**: Including non-aggregated columns
-2. **Missing table aliases**: Ambiguous column references
-3. **Wrong JOIN conditions**: Cartesian products or missing data
-4. **Subquery correlation**: Forgetting to correlate EXISTS subqueries
-5. **NULL handling**: Not considering missing relationships
-
-## Performance Considerations
 
 - **Composite indexes**: On (Piece, Provider) for Provides table
 - **Foreign key indexes**: Automatic with constraints
 - **Subquery optimization**: EXISTS often faster than IN for large datasets
 - **JOIN order**: Optimizer may rearrange, but understanding helps
 
-## Best Practices
-
-1. **Use meaningful aliases**: p for Pieces, pr for Providers, pv for Provides
-2. **Test with sample data**: Verify complex queries return expected results
-3. **Consider normalization**: Junction tables for many-to-many relationships
-4. **Document business rules**: Pricing logic, supplier relationships
-5. **Index foreign keys**: Critical for JOIN performance
-
-## Business Logic Examples
 
 - **Cost analysis**: Finding cheapest suppliers for each part
 - **Supplier diversity**: Ensuring multiple suppliers per critical part

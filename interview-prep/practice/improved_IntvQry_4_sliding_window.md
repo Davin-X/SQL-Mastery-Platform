@@ -86,14 +86,12 @@ ORDER BY sale_date;
 - **Data volume**: Sliding windows work well with time-series data
 - **NULL handling**: NULL values affect averages
 
-## Interview Tips
 
 - **Explain frame clauses**: ROWS vs RANGE differences
 - **Boundary conditions**: What happens at the beginning of the dataset
 - **Performance**: When sliding windows become expensive
 - **Alternatives**: Self-joins for simple moving averages in older SQL versions
 
-## Real-World Applications
 
 - **Financial analysis**: Moving averages for stock trends
 - **Sales forecasting**: Rolling averages for demand planning

@@ -146,7 +146,6 @@ JOIN store_prices sp2 ON p.product_id = sp2.product_id AND sp2.store_id = 2;
 - **JOIN Complexity**: Multiple store comparisons can be expensive
 - **Subqueries**: Correlated subqueries can be slow on large datasets
 
-## Interview Tips
 
 - **Explain LEAST/GREATEST**: Returns minimum/maximum of given values
 - **Database differences**: Not all databases support these functions
@@ -154,7 +153,6 @@ JOIN store_prices sp2 ON p.product_id = sp2.product_id AND sp2.store_id = 2;
 - **Use cases**: Price comparisons, boundary checking, range calculations
 - **Performance**: Consider when aggregations vs window functions are better
 
-## Real-World Applications
 
 - **Retail**: Price comparison across stores
 - **Finance**: Finding best/worst rates across providers

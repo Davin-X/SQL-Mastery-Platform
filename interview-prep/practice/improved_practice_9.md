@@ -297,9 +297,6 @@ ORDER BY E.Name, P.Name;
 
 **Expected Output**: Comprehensive shipping analytics by manager and planet
 
-## Key Concepts Demonstrated
-
-### Complex Multi-Table Relationships
 - **Employee clearances**: Many-to-many with security levels
 - **Shipment management**: Linking managers, planets, and packages
 - **Package tracking**: Sender/recipient relationships through shipments
@@ -315,7 +312,6 @@ ORDER BY E.Name, P.Name;
 - **LEFT JOINs**: Handling missing relationships
 - **Aggregate functions**: Business metrics and KPIs
 
-## Interview Tips
 
 - **Complex schemas**: Understanding business domain relationships
 - **Security models**: Access control and clearance levels
@@ -323,7 +319,6 @@ ORDER BY E.Name, P.Name;
 - **Performance**: Optimizing multi-table queries
 - **Data integrity**: Foreign key relationships and constraints
 
-## Real-World Applications
 
 These patterns are essential for:
 - **Shipping companies**: Package tracking and routing
@@ -332,15 +327,6 @@ These patterns are essential for:
 - **Government**: Planetary exploration and mission management
 - **Any system with complex permissions and routing**
 
-## Best Practices Demonstrated
-
-1. **Proper normalization**: Separate tables for entities and relationships
-2. **Foreign key constraints**: Maintaining referential integrity
-3. **Composite primary keys**: Unique combinations (Employee + Planet)
-4. **Descriptive naming**: Clear table and column names
-5. **Comprehensive relationships**: All business rules captured
-
-## Performance Considerations
 
 - **Index strategy**: Foreign keys need indexing for JOIN performance
 - **Query optimization**: Complex JOINs may need query tuning

@@ -86,21 +86,12 @@ FROM customer_orders;
 | ISNULL | ❌ | ❌ | ✅ | ❌ |
 | NVL | ❌ | ❌ | ❌ | ✅ |
 
-## Best Practices for NULL Handling
-
-1. **COALESCE for Portability**: Works across all major databases
-2. **Consistent Defaults**: Apply same logic throughout query
-3. **Documentation**: Comment why you're using specific defaults
-4. **Testing**: Verify NULL scenarios in test data
-
-## Common NULL Scenarios in Interviews
 
 1. **Missing Data**: Handle absent values gracefully
 2. **Optional Fields**: Provide sensible defaults
 3. **Calculations**: Prevent NULL from breaking math operations
 4. **Joins**: Handle unmatched rows appropriately
 
-## Interview Tips
 
 - **Ask about database**: Different databases have different functions
 - **Explain business logic**: Why specific defaults were chosen
@@ -108,7 +99,6 @@ FROM customer_orders;
 - **Edge cases**: What if all values are NULL?
 - **Alternatives**: CASE vs COALESCE readability trade-offs
 
-## Real-World Applications
 
 - **E-commerce**: Default shipping costs, discount handling
 - **Financial data**: Missing interest rates, default values

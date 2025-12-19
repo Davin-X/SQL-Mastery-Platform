@@ -138,39 +138,3 @@ ORDER BY time_period;
 
 **How it works**: Categorizes trains by departure time periods and analyzes duration statistics.
 
-## Performance Considerations
-
-- **Index on time columns**: Essential for time-based queries
-- **Partitioning**: Consider partitioning by date for historical data
-- **Time calculations**: TIMEDIFF is efficient but consider timezone handling
-- **Complex queries**: Window functions can be expensive on large datasets
-
-## Common Interview Patterns
-
-1. **Schedule optimization**: Finding best routes based on time/cost
-2. **Time window analysis**: Peak vs off-peak performance
-3. **Route comparison**: Direct vs connecting services
-4. **Capacity planning**: Demand analysis by time periods
-
-## Interview Tips
-
-- **Time handling**: Be careful with date/time data types
-- **Business logic**: Consider user preferences (speed vs cost vs convenience)
-- **Edge cases**: Midnight crossings, timezone differences
-- **Performance**: Time-based queries often need optimization
-- **Realism**: Transportation scheduling is a common real-world scenario
-
-## Real-World Applications
-
-- **Transportation**: Train, bus, flight schedule optimization
-- **Delivery services**: Route planning and time window analysis
-- **Ride sharing**: Finding fastest routes within time constraints
-- **Event planning**: Scheduling within available time slots
-- **Resource allocation**: Time-based capacity planning
-
-## MySQL-Specific Notes
-
-- **TIME functions**: TIMEDIFF, TIME_TO_SEC, HOUR, MINUTE, SECOND
-- **Date arithmetic**: DATE_ADD, DATE_SUB for schedule calculations
-- **Time zones**: Consider CONVERT_TZ for multi-timezone operations
-- **Performance**: Use indexes on departure_time, arrival_time columns

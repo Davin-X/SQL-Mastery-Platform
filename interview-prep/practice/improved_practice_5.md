@@ -269,4 +269,3 @@ DROP INDEX INDEX_WAREHOUSE;
 
 **Result**: Index removed from Warehouse column
 
-## Key Concepts Covered

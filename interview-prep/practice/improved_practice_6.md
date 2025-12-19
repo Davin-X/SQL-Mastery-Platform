@@ -170,9 +170,6 @@ WHERE Movie IN (
 
 **Result**: Theaters showing NC-17 movies removed (Royale theater)
 
-## Key Concepts Demonstrated
-
-### JOIN Operations
 - **INNER JOIN**: Only matching rows
 - **LEFT JOIN**: All left table rows + matches
 - **RIGHT JOIN**: All right table rows + matches
@@ -221,7 +218,6 @@ SELECT * FROM A RIGHT JOIN B ON A.id = B.id;
 SELECT * FROM B LEFT JOIN A ON B.id = A.id;
 ```
 
-## Interview Tips
 
 - **JOIN Selection**: Always explain why you chose a particular JOIN type
 - **NULL Awareness**: Be careful with NULL values in subqueries and JOINs
@@ -229,7 +225,6 @@ SELECT * FROM B LEFT JOIN A ON B.id = A.id;
 - **Business Logic**: Ensure queries match real-world requirements
 - **Edge Cases**: Test with NULL values and empty result sets
 
-## Real-World Applications
 
 These patterns are essential for:
 - **Content management**: Movies/shows and their venues
@@ -238,25 +233,9 @@ These patterns are essential for:
 - **Inventory**: Items and their storage locations
 - **Any one-to-many relationship** with optional associations
 
-## Common Mistakes to Avoid
-
-1. **Using INNER JOIN when LEFT JOIN is needed**
-2. **Forgetting NULL handling in subqueries**
-3. **Incorrect JOIN conditions**
-4. **Not testing with NULL values**
-5. **Assuming RIGHT JOIN works the same as LEFT JOIN**
-
-## Performance Considerations
 
 - **Index foreign keys**: Movie column in MovieTheaters should be indexed
 - **LEFT vs INNER JOIN**: LEFT JOIN can be more expensive
 - **Subquery optimization**: NOT IN can be slow with large datasets
 - **JOIN order**: Optimizer may rearrange, but understanding helps
 
-## Best Practices
-
-1. **Choose appropriate JOIN**: Match business requirements
-2. **Handle NULLs explicitly**: Don't assume missing data
-3. **Test edge cases**: Empty tables, all NULL values
-4. **Use table aliases**: Improve readability
-5. **Comment complex logic**: Explain why certain approaches are used

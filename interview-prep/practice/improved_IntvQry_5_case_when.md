@@ -82,7 +82,6 @@ FROM employees;
 
 **How it works**: Both CASE statements use searched format for consistency.
 
-## CASE WHEN Best Practices
 
 ### Simple CASE
 ```sql
@@ -105,30 +104,3 @@ END
 **Use for**: Complex conditions, ranges, different columns
 
 ## Common Patterns
-
-1. **Categorization**: Salary brackets, age groups, risk levels
-2. **Data Cleaning**: Standardizing inconsistent values
-3. **Conditional Calculations**: Different formulas based on conditions
-4. **Pivot Logic**: Creating flags or indicators
-
-## Performance Notes
-
-- **Index Usage**: CASE doesn't prevent index usage on underlying columns
-- **Execution Order**: SQL evaluates WHEN clauses in order
-- **NULL Handling**: CASE returns NULL if no condition matches and no ELSE
-- **Data Types**: All THEN/ELSE results must be compatible types
-
-## Interview Tips
-
-- **Explain CASE types**: Simple vs Searched differences
-- **Order matters**: More specific conditions first
-- **NULL handling**: Always include ELSE or handle NULLs explicitly
-- **Performance**: CASE is usually efficient, doesn't prevent optimization
-- **Readability**: Searched CASE is often clearer for complex logic
-
-## Real-World Applications
-
-- **Customer Segmentation**: Based on purchase history, demographics
-- **Risk Assessment**: Credit scores, insurance ratings
-- **Dynamic Pricing**: Discounts based on customer type, quantity
-- **Status Classification**: Order status, employee levels, priority levels

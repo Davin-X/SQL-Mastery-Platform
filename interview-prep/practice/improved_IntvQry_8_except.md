@@ -128,7 +128,6 @@ WHERE sb.customer_id IS NULL;
 - **NULL Handling**: NULL = NULL is false, so NULLs affect matching
 - **Duplicates**: Set operations automatically remove duplicates
 
-## Interview Tips
 
 - **Database Awareness**: EXCEPT works in PostgreSQL/SQL Server, MINUS in Oracle
 - **Alternatives**: Know NOT EXISTS and LEFT JOIN approaches
@@ -136,7 +135,6 @@ WHERE sb.customer_id IS NULL;
 - **Use Cases**: System comparison, data validation, migration verification
 - **Edge Cases**: NULL values, partial matches, data type differences
 
-## Real-World Applications
 
 - **ETL Processes**: Verifying data transfer completeness
 - **System Migration**: Finding records that didn't migrate

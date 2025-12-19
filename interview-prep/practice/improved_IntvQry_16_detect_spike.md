@@ -207,7 +207,6 @@ ORDER BY sale_date;
 3. **Sales analysis**: Finding promotional campaign impacts
 4. **System monitoring**: Detecting performance anomalies
 
-## Interview Tips
 
 - **Statistical knowledge**: Explain Z-scores and standard deviations
 - **Business context**: Why detecting spikes matters for the business
@@ -215,7 +214,6 @@ ORDER BY sale_date;
 - **Parameter tuning**: How to adjust sensitivity (2σ vs 3σ)
 - **False positives**: Balance between catching anomalies and avoiding noise
 
-## Real-World Applications
 
 - **E-commerce**: Detecting fraudulent orders or promotional spikes
 - **Finance**: Identifying unusual trading patterns or money laundering
@@ -252,11 +250,3 @@ SELECT * FROM daily_sales
 WHERE total_sales = (SELECT MAX(total_sales) FROM daily_sales);
 ```
 
-## Best Practices
-
-1. **Define clear thresholds**: 2σ, 3σ, or percentile-based detection
-2. **Consider seasonality**: Day-of-week, month-of-year patterns
-3. **Use multiple methods**: Combine statistical and business rules
-4. **Monitor false positives**: Tune parameters based on business impact
-5. **Historical context**: Compare against similar time periods
-6. **Alert thresholds**: Different severity levels for different responses

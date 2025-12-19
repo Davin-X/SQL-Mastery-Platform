@@ -217,4 +217,3 @@ LIMIT 1;
 
 **Expected Output**: IT department with 5 employees
 
-## Key Concepts Covered

@@ -149,7 +149,6 @@ ORDER BY total_subordinates DESC;
 3. **Performance**: Slow on very large hierarchies
 4. **Memory**: Can consume significant resources
 
-## Interview Tips
 
 - **Explain recursion**: "CTE calls itself until condition is met"
 - **Base vs recursive**: Distinguish starting case from continuation
@@ -157,7 +156,6 @@ ORDER BY total_subordinates DESC;
 - **Alternatives**: Consider when iterative approaches are better
 - **Performance**: Mention limitations and optimization strategies
 
-## Real-World Applications
 
 - **Organizational Charts**: Building company hierarchy views
 - **Approval Workflows**: Finding escalation paths

@@ -164,7 +164,6 @@ ORDER BY monthly_sundays;
 
 **How it works**: Generates all Sundays in the current month for report scheduling.
 
-## Interview Tips
 
 - **Date functions vary by database**: Know the differences (DAYOFWEEK vs EXTRACT(DOW) vs DATEPART)
 - **Day numbering conventions**: Sunday as 1, 0, or 7 depending on database
@@ -172,7 +171,6 @@ ORDER BY monthly_sundays;
 - **Business applications**: Report scheduling, deadline calculations
 - **Performance**: Simple calculations, no complex queries needed
 
-## Real-World Applications
 
 - **Report scheduling**: Weekly reports on Sundays
 - **Deadline calculations**: Nth business day calculations
@@ -180,15 +178,6 @@ ORDER BY monthly_sundays;
 - **Project planning**: Milestone date calculations
 - **Event scheduling**: Recurring event dates
 
-## Key Concepts Demonstrated
-
-- **Date arithmetic**: DATE_ADD, DATE_SUB operations
-- **Day of week calculations**: DAYOFWEEK, EXTRACT(DOW), DATEPART
-- **Conditional logic**: CASE statements for date adjustments
-- **Reusable functions**: UDFs for complex date calculations
-- **Cross-database compatibility**: Different approaches for different RDBMS
-
-## Testing and Validation
 
 ```sql
 -- Test the calculation
@@ -211,15 +200,6 @@ SELECT
 - **CPU intensive**: Minimal computational overhead
 - **Caching**: Results can be cached for repeated calculations
 
-## Best Practices
-
-1. **Create UDFs**: For reusable date calculations
-2. **Handle edge cases**: Start date is Sunday, month boundaries
-3. **Validate results**: Always verify calculated dates are correct
-4. **Document logic**: Complex date math needs clear comments
-5. **Test thoroughly**: Different start dates and n values
-
-## Alternative Approaches
 
 ### Simple Loop Method (Procedural)
 ```sql

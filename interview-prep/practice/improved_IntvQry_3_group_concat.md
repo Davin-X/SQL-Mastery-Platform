@@ -113,14 +113,12 @@ ORDER BY category;
 3. **Empty Groups**: Categories with no products won't appear
 4. **Sorting**: Without ORDER BY, results may be in arbitrary order
 
-## Interview Tips
 
 - **Ask about database**: Different databases have different functions
 - **Mention alternatives**: XML PATH for older SQL Server
 - **Consider performance**: String aggregation can be expensive on large datasets
 - **Edge cases**: Empty categories, special characters in product names
 
-## Real-World Applications
 
 - **Product catalogs**: Group products by category for display
 - **Tag systems**: Show all tags for an article

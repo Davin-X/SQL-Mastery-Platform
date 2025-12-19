@@ -169,7 +169,6 @@ ORDER BY product_id;
 3. **Inventory management**: Handling stock updates and new items
 4. **Change data capture**: Applying incremental updates
 
-## Interview Tips
 
 - **Database differences**: MySQL uses INSERT ... ON DUPLICATE, SQL Server uses MERGE, PostgreSQL uses ON CONFLICT
 - **Business logic**: Understand when to INSERT vs UPDATE vs ignore
@@ -177,7 +176,6 @@ ORDER BY product_id;
 - **Performance**: MERGE can be expensive on large tables
 - **Error handling**: What happens with constraint violations
 
-## Real-World Applications
 
 - **Inventory systems**: Updating stock levels from multiple sources
 - **ETL pipelines**: Loading data with conflict resolution
@@ -194,10 +192,3 @@ ORDER BY product_id;
 | PostgreSQL | INSERT ... ON CONFLICT | Standards-compliant |
 | Oracle | MERGE | Similar to SQL Server |
 
-## Best Practices
-
-1. **Test thoroughly**: UPSERT operations can be tricky with complex logic
-2. **Use transactions**: Ensure atomicity of complex updates
-3. **Validate data**: Check constraints before merging
-4. **Monitor performance**: UPSERT can be slower than separate operations
-5. **Document logic**: Complex merge rules need clear documentation

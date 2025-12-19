@@ -165,9 +165,6 @@ ORDER BY P.Hours DESC, S.Name;
 
 **Expected Output**: Complete assignment details with effort categorization
 
-## Key Concepts Demonstrated
-
-### Research Project Management
 - **Resource allocation**: Scientists assigned to projects
 - **Workload balancing**: Hours distribution across assignments
 - **Project tracking**: Assignment status and completion
@@ -182,7 +179,6 @@ ORDER BY P.Hours DESC, S.Name;
 - **Assignment statistics**: Project participation counts
 - **Performance metrics**: High/low effort categorization
 
-## Interview Tips
 
 - **Resource management**: Common in project management interviews
 - **Complex JOINs**: Understanding multi-table relationships
@@ -190,7 +186,6 @@ ORDER BY P.Hours DESC, S.Name;
 - **Business logic**: Project allocation and workload balancing
 - **Performance**: Efficient queries for large research organizations
 
-## Real-World Applications
 
 These patterns are essential for:
 - **Research institutions**: Scientist project assignments
@@ -236,15 +231,6 @@ GROUP BY S.SSN, S.Name
 HAVING COUNT(A.Project) > 2;
 ```
 
-## Best Practices
-
-1. **Composite primary keys**: (Scientist, Project) prevents duplicate assignments
-2. **Foreign key constraints**: Maintains data integrity
-3. **LEFT JOIN for reporting**: Include items with no assignments
-4. **INDEX on foreign keys**: Performance for JOIN operations
-5. **Audit trail**: Consider logging assignment changes
-
-## Performance Considerations
 
 - **Index strategy**: Foreign keys and frequently queried columns
 - **Query optimization**: Use appropriate JOIN types

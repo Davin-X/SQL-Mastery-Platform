@@ -147,7 +147,6 @@ LIMIT 1, 1;  -- Skip 1, take 1 (starts from 0-based index)
 3. **Pagination**: Getting specific positions in ordered data
 4. **Median finding**: Statistical calculations on salaries
 
-## Interview Tips
 
 - **Clarify requirements**: Does the company want distinct salaries or all employees?
 - **Consider ties**: How should duplicate salaries be handled?
@@ -155,7 +154,6 @@ LIMIT 1, 1;  -- Skip 1, take 1 (starts from 0-based index)
 - **Edge cases**: What if there are fewer than N distinct salaries?
 - **Scalability**: Consider how the solution works with millions of employees
 
-## Real-World Applications
 
 - **Compensation analysis**: Identifying salary bands and outliers
 - **Performance reviews**: Ranking employee performance
@@ -179,15 +177,6 @@ EXPLAIN SELECT salary FROM (
 ) ranked WHERE rnk = 2;
 ```
 
-## Best Practices
-
-1. **Choose appropriate ranking function**: ROW_NUMBER vs RANK vs DENSE_RANK
-2. **Consider NULL salaries**: Add WHERE salary IS NOT NULL if needed
-3. **Handle empty results**: What if N is larger than available salaries?
-4. **Index salary column**: ORDER BY on indexed column improves performance
-5. **Test with real data**: Verify behavior with your actual data distribution
-
-## Alternative: Using Variables (MySQL)
 
 ```sql
 SET @row_number = 0;

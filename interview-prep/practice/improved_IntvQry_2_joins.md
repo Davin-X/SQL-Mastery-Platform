@@ -69,17 +69,3 @@ SELECT * FROM table1 FULL OUTER JOIN table2 ON table1.t1 = table2.t2;
 **Result**: 17 records  
 **How it works**: FULL OUTER JOIN combines LEFT and RIGHT JOIN results. In MySQL, we use UNION ALL since FULL OUTER JOIN isn't supported. Returns all rows from both tables with NULLs where no matches exist.
 
-## Key Concepts
-
-- **INNER JOIN**: Only matching rows (NULL ≠ NULL)
-- **LEFT JOIN**: All left rows + matches from right
-- **RIGHT JOIN**: All right rows + matches from left  
-- **FULL OUTER JOIN**: All rows from both tables
-- **NULL behavior**: NULL values never match in equality comparisons
-
-## Interview Tips
-
-- Always clarify which database is being used (MySQL doesn't have FULL OUTER JOIN)
-- Explain NULL handling explicitly
-- Count Cartesian products systematically
-- Consider performance implications of different JOIN types
