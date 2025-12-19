@@ -1,169 +1,146 @@
-# SQL Mastery Platform
+# 🎯 SQL Mastery Platform - Interview Preparation
 
-Complete SQL learning curriculum from basics to advanced analytics and interview preparation.
+**Ace SQL interviews** with structured practice problems, real-world scenarios, and comprehensive solutions.
 
-## Learning Path
+## 🚀 Quick Start (30-Day Interview Prep)
 
-| Phase | Focus | Duration | Topics |
-|-------|--------|----------|--------|
-| **Foundational** | Core SQL | 8 weeks | DDL, CRUD, JOINs, aggregations |
-| **Intermediate** | Advanced Features | 4 weeks | Window functions, CTEs, transactions |
-| **Advanced** | Analytics | 4 weeks | Stored procedures, analytics, modern SQL |
-| **Interview Prep** | Problem Solving | 4 weeks | Algorithmic problems, optimization |
+### **Week 1-2: Foundations** 
+- **Problems 1-4**: JOINs, aggregations, basic patterns
+- **Focus**: Core SQL concepts and syntax
+- **Goal**: Solve 3-4 problems confidently
 
-## Repository Structure
+### **Week 3-4: Intermediate Skills**
+- **Problems 5-8**: Window functions, CTEs, set operations  
+- **Focus**: Advanced query patterns
+- **Goal**: Master common interview questions
+
+### **Week 5-6: Advanced Patterns**
+- **Problems 9-12**: Complex algorithms, time-series, deduplication
+- **Focus**: System design and optimization
+- **Goal**: Handle senior-level challenges
+
+### **Week 7-8: Business Intelligence**
+- **Problems 13-14**: Analytics, forecasting, customer metrics
+- **Focus**: Real-world business scenarios
+- **Goal**: Demonstrate business acumen
+
+## 📋 Repository Structure
 
 ```
 SQL-Mastery-Platform/
-├── syntax/                    # Database-specific syntax guides
-│   ├── mysql/                # MySQL syntax & setup
-│   ├── postgresql/           # PostgreSQL syntax & setup
-│   └── sql-server/           # SQL Server syntax & setup
-├── curriculum/               # Learning curriculum by topic
-│   ├── foundational/         # Basic SQL concepts
-│   ├── intermediate/         # Advanced SQL features
-│   ├── advanced/            # Complex queries and analytics
-│   └── specialized/          # Domain-specific applications
-├── problems/                 # 14 interview problem sets
-├── examples/                 # Sample data & runnable scripts
-├── guides/                   # Setup and learning guides
-└── README.md                # This file
+├── interview-prep/           # 🎯 Interview problems organized by difficulty
+│   ├── README.md            # Practice roadmap and tips
+│   ├── easy/                # ⭐ Basic problems (1-4)
+│   ├── medium/              # ⭐⭐ Intermediate problems (5-8)
+│   ├── hard/                # ⭐⭐⭐ Advanced problems (9-12)
+│   └── expert/              # ⭐⭐⭐⭐ Senior problems (13-14)
+├── problems/                # Original interview problems (numbered)
+├── curriculum/              # 📚 Core learning curriculum
+│   ├── foundational/        # Basic SQL concepts
+│   ├── intermediate/        # Advanced features  
+│   ├── advanced/           # Complex queries & analytics
+│   └── specialized/         # Domain-specific applications
+├── syntax/                  # Database-specific syntax guides
+├── examples/                # Sample data and setup scripts
+└── guides/                  # Setup guides and resources
 ```
 
-## Quick Start
+## 🛠️ Setup for Practice
 
-### Choose Your Path
-
-#### Single Database Focus (Recommended)
+### 1. Choose Your Database
 ```bash
-# Pick one database
-cd syntax/mysql/        # or postgresql/ or sql-server/
-
-# Follow setup guide
-cat README.md           # Installation instructions
-
-# Load sample data
-./examples/load_sample_data.sh -u root -p your_password -d sample_hr
+cd syntax/mysql/          # MySQL (most common)
+# or cd syntax/postgresql/ # PostgreSQL (advanced features)
+# or cd syntax/sql-server/ # SQL Server (enterprise)
 ```
 
-#### Multi-Database Comparison
+### 2. Install and Setup
 ```bash
-# Study differences across databases
-cat MULTI_DATABASE_SUPPORT.md
-
-# Compare syntax in curriculum files
-cd curriculum/foundational/
-# Each file shows examples for all 3 databases
+cat README.md             # Installation instructions
+./examples/load_sample_data.sh -u username -p password -d database
 ```
 
-### Prerequisites
-- SQL Database: MySQL 8.0+, PostgreSQL 12+, or SQL Server 2017+
-- Text editor or SQL client (DBeaver, DataGrip recommended)
-
-## Learning Curriculum
-
-### Phase 1: Foundations (Weeks 1-8)
-
-| Week | Topic | Key Concepts | Problems |
-|------|--------|--------------|----------|
-| 1 | Schema & DDL | CREATE/ALTER/DROP, constraints, indexes | 1-2 |
-| 2 | CRUD/DML | INSERT/UPDATE/DELETE operations | 1-2 |
-| 3 | SELECT & JOINs | INNER/LEFT/RIGHT/FULL joins | 1, 7, 8 |
-| 4 | Aggregations | GROUP BY, HAVING, statistical functions | 3, 6 |
-| 5 | Window Functions | ROW_NUMBER, RANK, LEAD/LAG | 5-6 |
-| 6 | CTEs & Recursion | WITH clauses, recursive queries | 4, 9-12 |
-| 7 | Transactions & DCL | COMMIT/ROLLBACK, GRANT/REVOKE | 7-8 |
-| 8 | Performance Tuning | Indexing, EXPLAIN, optimization | All previous |
-
-### Phase 2: Advanced Analytics (Weeks 9-12)
-
-| Week | Topic | Applications |
-|------|--------|--------------|
-| 9 | Statistical Functions | NTILE, PERCENT_RANK, CUME_DIST, CORR |
-| 10 | Modern SQL | JSON operations, arrays, full-text search |
-| 11-12 | Business Intelligence | CLV analysis, churn prediction, market insights |
-
-## Problem Sets
-
-### Technical Problems (1-12)
-- **01 Joins**: Complex multi-table queries
-- **02 Conditionals**: CASE statements and logic
-- **03 Aggregation**: String concatenation, grouping
-- **04 Recursive CTEs**: Tree traversal, sequences
-- **05 Window Functions**: Partitioning and ordering
-- **06 Ranking**: Top-N and percentile problems
-- **07 Merge/Upsert**: Source-target synchronization
-- **08 Set Operations**: Anti-joins and set logic
-- **09 Scheduling**: Time-based analysis and gaps
-- **10 Matching**: Deduplication and fuzzy matching
-- **11 Spike Detection**: Anomaly detection algorithms
-- **12 Advanced Patterns**: Complex multi-table scenarios
-
-### Business Intelligence (13-14)
-- **13 Advanced Analytics**: Statistical distributions, performance tiers
-- **14 E-commerce Analytics**: Customer lifetime value, churn modeling
-
-## Database Support
-
-### Multi-Database Compatibility
-- **MySQL**: Most popular for web applications
-- **PostgreSQL**: Advanced features, JSON support
-- **SQL Server**: Enterprise environments, Windows integration
-
-Each curriculum file includes examples for all three databases with detailed syntax differences.
-
-## Getting Started Guide
-
+### 3. Start Practicing
 ```bash
-# 1. Choose your database
-cd syntax/mysql/           # MySQL setup
-# or cd syntax/postgresql/  # PostgreSQL setup
-# or cd syntax/sql-server/  # SQL Server setup
-
-# 2. Follow installation guide
-cat README.md
-
-# 3. Load sample database
-./examples/load_sample_data.sh -u username -p password -d database_name
-
-# 4. Start learning
-cd ../../curriculum/foundational/
-# Run 01_schema_and_ddl.sql in your database
+cd interview-prep/        # For structured interview prep
+cat README.md            # Get your 30-day practice roadmap
+ls -la */                # See problems organized by difficulty
+cd easy/                # Start with basic problems
+ls *.md                 # Choose your first problem
 ```
 
-## Sample Database
+## 🎯 Interview Problem Categories
 
-The repository includes a realistic HR schema with:
-- **6 tables**: employees, departments, jobs, locations, etc.
-- **200+ rows** of sample data
-- **Real-world scenarios**: Salaries, hierarchies, performance data
+| Category | Problems | Key Skills | Interview Frequency |
+|----------|----------|------------|-------------------|
+| **Core SQL** | 1-4 | JOINs, aggregations, subqueries | Very High |
+| **Advanced Queries** | 5-8 | Window functions, CTEs, set ops | High |
+| **Complex Patterns** | 9-12 | Algorithms, time-series, stats | Medium-High |
+| **Business Intelligence** | 13-14 | Analytics, forecasting, CLV | Medium |
 
-## Interview Preparation
+## 📊 Success Metrics by Experience Level
 
-### Algorithmic SQL Problems
-- 14 comprehensive problem sets
-- Multiple solution approaches
-- Performance optimization techniques
-- Real interview scenarios
+### Junior Developer (1-2 years)
+- ✅ Problems 1-6 solved within time limits
+- ✅ Explains JOIN types and basic aggregations
+- ✅ Comfortable with subqueries and CTEs
 
-### Business Intelligence Cases
-- Customer analytics and segmentation
-- Churn prediction modeling
-- Market basket analysis
-- Time series forecasting
+### Mid-Level Developer (3-5 years)
+- ✅ Problems 1-10 mastered with optimizations
+- ✅ Proficient in window functions and complex joins
+- ✅ Can handle business logic and data analysis
 
-## Contributing
+### Senior Developer (5+ years)
+- ✅ All problems solved including advanced analytics
+- ✅ Considers scalability and performance at scale
+- ✅ Applies SQL to system design and architecture
 
-Contributions welcome! Areas for help:
-- Additional database support (Oracle, SQLite)
-- More advanced problem sets
+## 🏆 Interview Tips
+
+### Before the Interview
+- **Know your database**: Practice on the system they'll use
+- **Time management**: Set 30-45 minute limits per problem
+- **Explain thinking**: Verbalize your approach as you work
+
+### During the Interview
+- **Clarify requirements**: Ask about edge cases and constraints
+- **Consider performance**: Discuss indexing and optimization
+- **Think business context**: Understand the real-world application
+
+### Common Interview Patterns
+- **Data exploration**: Understanding table relationships
+- **NULL handling**: Dealing with missing or incomplete data
+- **Performance questions**: Optimizing for large datasets
+- **Business logic**: Translating requirements to queries
+
+## 📚 Learning Paths
+
+### For Interview Preparation
+- **Start here**: `interview-prep/README.md` - Structured 30-day plan
+- **Problems**: Difficulty-organized with time estimates
+- **Focus**: Real interview scenarios and optimization
+
+### For Comprehensive Learning  
+- **Curriculum**: `curriculum/` - Complete SQL learning path
+- **Foundation → Intermediate → Advanced**: Systematic skill building
+- **Database-specific**: Syntax variations included
+
+### For Quick Setup
+- **Guides**: `guides/` - Installation and configuration
+- **Examples**: `examples/` - Sample data and scripts
+- **Syntax**: `syntax/` - Database-specific references
+
+## 🤝 Contributing
+
+**Focus areas for contributions:**
+- More interview-style problems
 - Performance optimization examples
 - Real-world business scenarios
-
-## License
-
-MIT License - see LICENSE file for details.
+- Database-specific interview tips
 
 ---
 
-**Start your SQL mastery journey with [getting started guide](guides/quick-start.md)**
+**Choose your path:**
+- **🎯 Interview prep**: `cd interview-prep/`
+- **📚 Learning**: `cd curriculum/foundational/`
+- **🛠️ Setup**: `cd syntax/mysql/`
