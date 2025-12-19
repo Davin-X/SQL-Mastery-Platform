@@ -3,7 +3,7 @@
 ## Question
 Write SQL queries to analyze employee data, demonstrating basic SELECT operations, WHERE clauses, and simple aggregations.
 
-## SQL Setup (Tables and Sample Data)
+## SQL Setup
 
 ```sql
 CREATE TABLE employees (
@@ -27,205 +27,113 @@ INSERT INTO employees VALUES
 (8, 'Frank', 'Garcia', 'HR', 52000.00, '2021-06-20', 5);
 ```
 
-## Query 1: Basic SELECT - All Employees
+## Solutions
 
+### Query 1: Basic SELECT - All Employees
 ```sql
 SELECT * FROM employees;
 ```
+**Result**: All 8 employee records
 
-**Expected Output**: All 8 employee records with all columns.
-
-## Query 2: SELECT Specific Columns
-
+### Query 2: SELECT Specific Columns
 ```sql
-SELECT first_name, last_name, department, salary 
-FROM employees;
+SELECT first_name, last_name, department, salary FROM employees;
 ```
+**Result**: Employee names, departments, and salaries
 
-**Expected Output**: Only the specified columns for all employees.
-
-## Query 3: Filter by Department
-
+### Query 3: Filter by Department
 ```sql
-SELECT first_name, last_name, department, salary 
-FROM employees 
+SELECT first_name, last_name, department, salary FROM employees 
 WHERE department = 'Engineering';
 ```
+**Result**: John Smith, Jane Doe, Diana Davis
 
-**Expected Output**: John Smith, Jane Doe, Diana Davis.
-
-## Query 4: Filter by Salary Range
-
+### Query 4: Filter by Salary Range
 ```sql
-SELECT first_name, last_name, salary 
-FROM employees 
+SELECT first_name, last_name, salary FROM employees 
 WHERE salary BETWEEN 60000 AND 75000;
 ```
+**Result**: John Smith ($75k), Bob Johnson ($60k), Alice Brown ($65k), Diana Davis ($72k)
 
-**Expected Output**: John Smith ($75k), Bob Johnson ($60k), Alice Brown ($65k), Diana Davis ($72k).
-
-## Query 5: Filter with Multiple Conditions
-
+### Query 5: Filter with Multiple Conditions
 ```sql
-SELECT first_name, last_name, department, salary, hire_date 
-FROM employees 
+SELECT first_name, last_name, department, salary, hire_date FROM employees 
 WHERE department = 'Engineering' AND salary > 70000;
 ```
+**Result**: Jane Doe and Diana Davis
 
-**Expected Output**: Jane Doe and Diana Davis.
-
-## Query 6: Sort Results
-
+### Query 6: Sort Results
 ```sql
-SELECT first_name, last_name, department, salary 
-FROM employees 
+SELECT first_name, last_name, department, salary FROM employees 
 ORDER BY department, salary DESC;
 ```
+**Result**: Employees sorted by department, then salary descending
 
-**Expected Output**: Employees sorted by department, then by salary descending within each department.
-
-## Query 7: Find Managers (No Manager ID)
-
+### Query 7: Find Managers (No Manager ID)
 ```sql
-SELECT first_name, last_name, department 
-FROM employees 
+SELECT first_name, last_name, department FROM employees 
 WHERE manager_id IS NULL;
 ```
+**Result**: John Smith, Bob Johnson, Charlie Wilson
 
-**Expected Output**: John Smith (Engineering), Bob Johnson (Sales), Charlie Wilson (HR).
-
-## Query 8: Pattern Matching with LIKE
-
+### Query 8: Pattern Matching with LIKE
 ```sql
-SELECT first_name, last_name, department 
-FROM employees 
+SELECT first_name, last_name, department FROM employees 
 WHERE first_name LIKE 'J%';
 ```
+**Result**: John Smith and Jane Doe
 
-**Expected Output**: John Smith and Jane Doe.
-
-## Query 9: Calculate Average Salary
-
+### Query 9: Calculate Average Salary
 ```sql
-SELECT AVG(salary) AS average_salary 
-FROM employees;
+SELECT AVG(salary) AS average_salary FROM employees;
 ```
+**Result**: Average salary across all employees
 
-**Expected Output**: Average salary across all employees.
-
-## Query 10: Count Employees by Department
-
+### Query 10: Count Employees by Department
 ```sql
-SELECT department, COUNT(*) AS employee_count 
-FROM employees 
+SELECT department, COUNT(*) AS employee_count FROM employees 
 GROUP BY department;
 ```
+**Result**: Employee count per department
 
-**Expected Output**: Count of employees in each department.
-
-## Query 11: Find Highest Paid Employee
-
+### Query 11: Find Highest Paid Employee
 ```sql
-SELECT first_name, last_name, salary 
-FROM employees 
+SELECT first_name, last_name, salary FROM employees 
 WHERE salary = (SELECT MAX(salary) FROM employees);
 ```
+**Result**: Jane Doe with $80,000
 
-**Expected Output**: Jane Doe with $80,000.
-
-## Query 12: Recent Hires
-
+### Query 12: Recent Hires
 ```sql
-SELECT first_name, last_name, hire_date 
-FROM employees 
-WHERE hire_date >= '2021-01-01' 
-ORDER BY hire_date DESC;
+SELECT first_name, last_name, hire_date FROM employees 
+WHERE hire_date >= '2021-01-01' ORDER BY hire_date DESC;
 ```
+**Result**: Employees hired in 2021 or later
 
-**Expected Output**: Employees hired in 2021 or later.
-
-## Query 13: Department Salary Summary
-
+### Query 13: Department Salary Summary
 ```sql
-SELECT 
-    department,
-    COUNT(*) AS num_employees,
-    MIN(salary) AS min_salary,
-    MAX(salary) AS max_salary,
-    AVG(salary) AS avg_salary 
-FROM employees 
-GROUP BY department;
+SELECT department, COUNT(*) AS num_employees, MIN(salary) AS min_salary, 
+       MAX(salary) AS max_salary, AVG(salary) AS avg_salary 
+FROM employees GROUP BY department;
 ```
+**Result**: Salary statistics for each department
 
-**Expected Output**: Salary statistics for each department.
-
-## Query 14: Employees Earning Above Department Average
-
+### Query 14: Employees Earning Above Department Average
 ```sql
 SELECT e.first_name, e.last_name, e.department, e.salary, dept_avg.avg_salary
 FROM employees e
-JOIN (
-    SELECT department, AVG(salary) AS avg_salary 
-    FROM employees 
-    GROUP BY department
-) dept_avg ON e.department = dept_avg.department
+JOIN (SELECT department, AVG(salary) AS avg_salary FROM employees GROUP BY department) dept_avg 
+  ON e.department = dept_avg.department
 WHERE e.salary > dept_avg.avg_salary
 ORDER BY e.department, e.salary DESC;
 ```
+**Result**: Employees earning above their department average
 
-**Expected Output**: Employees earning above their department's average salary.
-
-## Query 15: Employee Hierarchy (Simple)
-
+### Query 15: Employee Hierarchy (Simple)
 ```sql
-SELECT 
-    e.first_name + ' ' + e.last_name AS employee,
-    m.first_name + ' ' + m.last_name AS manager
-FROM employees e
-LEFT JOIN employees m ON e.manager_id = m.emp_id
+SELECT e.first_name + ' ' + e.last_name AS employee,
+       m.first_name + ' ' + m.last_name AS manager
+FROM employees e LEFT JOIN employees m ON e.manager_id = m.emp_id
 ORDER BY m.last_name, e.last_name;
 ```
-
-**Expected Output**: Each employee with their manager (NULL for top-level managers).
-
-## Performance Tips
-
-- Use appropriate WHERE clauses to limit data retrieval
-- Index frequently queried columns (department, salary, hire_date)
-- Use EXPLAIN to understand query execution plans
-- Consider query optimization for large datasets
-
-## Common Mistakes to Avoid
-
-1. Forgetting table aliases in complex queries
-2. Using SELECT * in production code
-3. Not handling NULL values properly
-4. Incorrect GROUP BY clauses
-5. Missing ORDER BY for consistent results
-
-## Interview Tips
-
-- Start with simple queries and build complexity
-- Explain your thought process clearly
-- Consider edge cases (empty results, NULL values)
-- Mention performance implications
-- Ask clarifying questions about requirements
-
-## Learning Objectives
-
-- Basic SELECT syntax and column selection
-- WHERE clause filtering (equality, ranges, patterns)
-- ORDER BY for result sorting
-- Aggregate functions (COUNT, AVG, MIN, MAX)
-- GROUP BY for data summarization
-- JOIN operations for related data
-- Subqueries for complex filtering
-- NULL value handling
-
-## Real-World Application
-
-This practice covers fundamental SQL operations used daily in:
-- Employee management systems
-- HR analytics dashboards
-- Salary reporting tools
-- Organizational hierarchy displays
+**Result**: Each employee with their manager
