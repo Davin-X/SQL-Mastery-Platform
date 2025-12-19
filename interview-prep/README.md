@@ -97,3 +97,19 @@ cat README.md            # Setup instructions
 ---
 
 **Remember**: Quality practice beats quantity. Focus on understanding core concepts and explaining your thought process. Interview preparation is about demonstrating problem-solving skills, not memorizing solutions.
+
+## 📚 Practice Resources
+
+### Structured Problems (Organized)
+- **easy/**: 4 foundational problems with detailed solutions
+- **medium/**: 4 intermediate problems with advanced techniques
+- **hard/**: 4 complex problems with algorithmic thinking
+- **expert/**: 2 senior-level problems with business intelligence
+
+### Additional Practice Files
+- **practice/**: 30+ supplementary SQL query files including:
+  - `IntvQry_*.sql`: 16 additional interview-style queries
+  - `practice_*.sql`: 12 comprehensive practice exercises
+  - `55+_Complex SQL Query.sql`: Advanced complex query examples
+  - `window_analytical_functions.sql`: Extended window function practice
+  - `interview_query_*.sql`: Specialized interview scenarios
