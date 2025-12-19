@@ -15,7 +15,7 @@ Solve problems **01-04** to build core skills:
 ### **Phase 2: Intermediate Skills (Days 11-20)**
 Master problems **05-08** for common interview questions:
 - 05_window_functions.md - ROW_NUMBER, RANK, LEAD/LAG
-- 06_ranking.md - Top-N and percentile problems
+- 06_ranking.md - Top-N queries and percentiles
 - 07_merge_update.md - UPSERT patterns and data merging
 - 08_set_operations.md - UNION, INTERSECT, EXCEPT
 
@@ -23,7 +23,7 @@ Master problems **05-08** for common interview questions:
 **Time**: 60-75 minutes per problem
 
 ### **Phase 3: Advanced Patterns (Days 21-30)**
-Tackle complex problems **09-14** for senior roles:
+Tackle complex problems **09-12** for senior roles:
 - 09_scheduling.md - Date/time analysis and gaps
 - 10_matching_dedup.md - Fuzzy matching and deduplication
 - 11_spike_detection.md - Statistical analysis and anomalies
@@ -66,9 +66,9 @@ Tackle complex problems **09-14** for senior roles:
 
 **Senior Developer (5+ years)**
 - [ ] Solves all problems including advanced analytics
-- [ ] Considers system design and scalability
+- [ ] Considers scalability and performance at scale
 - [ ] Optimizes for large datasets and performance
-- [ ] Applies SQL to business intelligence scenarios
+- [ ] Applies SQL to system design and architecture
 
 ## 🛠️ Resources
 
@@ -85,19 +85,6 @@ cat README.md            # Setup instructions
 - **Mode Analytics**: Real-world SQL challenges
 - **HackerRank SQL**: Certification prep problems
 
-## 📊 Track Your Progress
-
-**Week 1-2**: Focus on JOINs and aggregations (Problems 1-4)
-**Week 3-4**: Master window functions and advanced queries (Problems 5-8)  
-**Week 5-6**: Practice complex patterns (Problems 9-12)
-**Week 7-8**: Business intelligence and advanced analytics (Problems 13-14)
-
-**Monthly Goal**: Complete 2-3 problems per week consistently
-
----
-
-**Remember**: Quality practice beats quantity. Focus on understanding core concepts and explaining your thought process. Interview preparation is about demonstrating problem-solving skills, not memorizing solutions.
-
 ## 📚 Practice Resources
 
 ### Structured Problems (Organized)
@@ -107,9 +94,22 @@ cat README.md            # Setup instructions
 - **expert/**: 2 senior-level problems with business intelligence
 
 ### Additional Practice Files
-- **practice/**: 30+ supplementary SQL query files including:
-  - `IntvQry_*.sql`: 16 additional interview-style queries
-  - `practice_*.sql`: 12 comprehensive practice exercises
-  - `55+_Complex SQL Query.sql`: Advanced complex query examples
-  - `window_analytical_functions.sql`: Extended window function practice
-  - `interview_query_*.sql`: Specialized interview scenarios
+- **practice/**: Curated examples of standardized interview questions:
+  - `improved_IntvQry_1_window_functions.md`: Ranking and window function patterns
+  - `improved_IntvQry_2_joins.md`: JOIN types with NULL behavior
+  - `improved_IntvQry_10_recursive_cte.md`: Row expansion with recursive CTEs
+
+  *These demonstrate the professional question → setup → answer → explanation format*
+
+## 📊 Track Your Progress
+
+**Week 1-2**: Focus on JOINs and aggregations (Problems 1-4)
+**Week 3-4**: Master window functions and CTEs (Problems 5-8)  
+**Week 5-6**: Practice complex patterns (Problems 9-12)
+**Week 7-8**: Business intelligence and advanced analytics (Problems 13-14)
+
+**Monthly Goal**: Complete 2-3 problems per week consistently
+
+---
+
+**Remember**: Quality practice beats quantity. Focus on understanding core concepts and explaining your thought process. Interview preparation is about demonstrating problem-solving skills, not memorizing solutions.
