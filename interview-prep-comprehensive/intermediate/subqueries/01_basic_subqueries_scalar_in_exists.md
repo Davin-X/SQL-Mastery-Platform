@@ -115,27 +115,27 @@ INSERT INTO sales_orders (order_id, customer_id, order_date, total_amount, statu
 
 ### Query 1: Employees above department average salary (scalar subquery)
 ```sql
-SELECT 
+SELECT
     e.emp_id,
     e.first_name,
     e.last_name,
     d.dept_name,
     e.salary,
     (
-        SELECT AVG(salary) 
-        FROM employees 
+        SELECT AVG(salary)
+        FROM employees
         WHERE dept_id = e.dept_id
     ) AS dept_avg_salary,
     e.salary - (
-        SELECT AVG(salary) 
-        FROM employees 
+        SELECT AVG(salary)
+        FROM employees
         WHERE dept_id = e.dept_id
     ) AS above_avg_amount
 FROM employees e
 INNER JOIN departments d ON e.dept_id = d.dept_id
 WHERE e.salary > (
-    SELECT AVG(salary) 
-    FROM employees 
+    SELECT AVG(salary)
+    FROM employees
     WHERE dept_id = e.dept_id
 )
 ORDER BY e.salary DESC;
@@ -146,13 +146,12 @@ ORDER BY e.salary DESC;
 |--------|------------|-----------|-----------|----------|-----------------|------------------|
 | 9      | Grace      | Hill      | Finance   | 85000.00 | 81500.00        | 3500.00          |
 | 2      | Jane       | Smith     | IT        | 80000.00 | 75666.67        | 4333.33          |
-| 10     | Henry      | Adams     | Finance   | 78000.00 | 81500.00        | -3500.00         |
 | 5      | Charlie    | Davis     | Sales     | 75000.00 | 70666.67        | 4333.33          |
-| 1      | John       | Doe       | IT        | 75000.00 | 75666.67        | -666.67          |
+| 8      | Frank      | Garcia    | HR        | 60000.00 | 57500.00        | 2500.00          |
 
 ### Query 2: Employees not assigned to any projects (NOT EXISTS)
 ```sql
-SELECT 
+SELECT
     e.emp_id,
     e.first_name,
     e.last_name,
@@ -162,8 +161,8 @@ SELECT
 FROM employees e
 INNER JOIN departments d ON e.dept_id = d.dept_id
 WHERE NOT EXISTS (
-    SELECT 1 
-    FROM project_assignments pa 
+    SELECT 1
+    FROM project_assignments pa
     WHERE pa.emp_id = e.emp_id
 )
 ORDER BY e.hire_date DESC;
@@ -177,7 +176,7 @@ ORDER BY e.hire_date DESC;
 
 ### Query 3: Departments with projects above average budget (IN subquery)
 ```sql
-SELECT 
+SELECT
     d.dept_id,
     d.dept_name,
     d.budget AS dept_budget,
@@ -187,9 +186,9 @@ SELECT
 FROM departments d
 LEFT JOIN projects p ON d.dept_id = p.dept_id
 WHERE d.dept_id IN (
-    SELECT dept_id 
-    FROM projects 
-    GROUP BY dept_id 
+    SELECT dept_id
+    FROM projects
+    GROUP BY dept_id
     HAVING AVG(budget) > (
         SELECT AVG(budget) FROM projects
     )
@@ -207,7 +206,7 @@ ORDER BY total_project_budget DESC;
 
 ### Query 4: Customers with orders exceeding credit limit (EXISTS with correlated subquery)
 ```sql
-SELECT 
+SELECT
     c.customer_id,
     c.customer_name,
     c.region,
@@ -218,9 +217,9 @@ SELECT
 FROM customers c
 LEFT JOIN sales_orders so ON c.customer_id = so.customer_id
 WHERE EXISTS (
-    SELECT 1 
-    FROM sales_orders so2 
-    WHERE so2.customer_id = c.customer_id 
+    SELECT 1
+    FROM sales_orders so2
+    WHERE so2.customer_id = c.customer_id
     AND so2.total_amount > c.credit_limit
 )
 GROUP BY c.customer_id, c.customer_name, c.region, c.credit_limit
@@ -234,7 +233,7 @@ ORDER BY total_order_value DESC;
 
 ### Query 5: Projects with no employee assignments (NOT IN)
 ```sql
-SELECT 
+SELECT
     p.project_id,
     p.project_name,
     d.dept_name,
@@ -245,7 +244,7 @@ SELECT
 FROM projects p
 INNER JOIN departments d ON p.dept_id = d.dept_id
 WHERE p.project_id NOT IN (
-    SELECT DISTINCT project_id 
+    SELECT DISTINCT project_id
     FROM project_assignments
 )
 ORDER BY p.budget DESC;
@@ -256,24 +255,24 @@ ORDER BY p.budget DESC;
 
 ### Query 6: Employees with salaries in top 25% of company (scalar comparison)
 ```sql
-SELECT 
+SELECT
     e.emp_id,
     e.first_name,
     e.last_name,
     d.dept_name,
     e.salary,
     (
-        SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary) 
+        SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary)
         FROM employees
     ) AS company_75th_percentile,
     e.salary - (
-        SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary) 
+        SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary)
         FROM employees
     ) AS above_75th_amount
 FROM employees e
 INNER JOIN departments d ON e.dept_id = d.dept_id
 WHERE e.salary >= (
-    SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary) 
+    SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY salary)
     FROM employees
 )
 ORDER BY e.salary DESC;
